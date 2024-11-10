@@ -1,0 +1,60 @@
+.custom-modal-width .modal-dialog {
+  max-width: 1400px;
+  position: fixed;
+}
+
+.custom-container {
+  padding: 1rem;
+  border-radius: 8px;
+  /*background: linear-gradient(to bottom, #d7d9d9, #e9ecef);*/
+  background-color: #fff;
+}
+
+.custom-header {
+  font-family: 'Ubuntu', sans-serif;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.custom-body1 .table {
+  background-color: #d7d7d7; 
+  border-radius: 8px;
+  overflow: auto;
+
+}
+
+.custom-body1 .table td {
+  border-top: none;
+  padding: 0.75rem;
+  vertical-align: middle;
+  font-size: 1rem;
+}
+
+.custom-body .table td:first-child {
+  font-weight: bold;
+  color: #666;
+}
+
+.custom-footer .btn {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.custom-footer .btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.custom-footer .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.custom-footer .btn-secondary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+

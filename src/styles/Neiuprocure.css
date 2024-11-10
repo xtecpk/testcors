@@ -1,0 +1,28 @@
+
+.table thead {
+    background-color: #f0f0f0; 
+    border-radius: 10px 10px 0 0; 
+    overflow: hidden; 
+  }
+  
+
+  .status-approved {
+    color: green;
+    font-weight: bold;
+  }
+  
+
+  .status-pending {
+    color: red;
+    font-weight: bold;
+  }
+  .custom-body {
+    background-color: rgba(255, 255, 255, 0.9); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    padding: 20px; 
+    margin: 20px; 
+    border-radius: 8px; 
+    flex-grow: 1; 
+    overflow: auto; 
+  }
+  
