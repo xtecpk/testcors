@@ -20,13 +20,25 @@
   font-family: 'Ubuntu', sans-serif;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+
+.nunito {
+  font-family: 'Nunito Sans', sans-serif;
+}
+
 .blue{
   background-color: #0A73BA !important;
   
+}
+.green{
+  background-color: #238600 !important;
 }
 
 .input{
   background-color: #F2F2F2 !important;
 }
+
+
+
 
 

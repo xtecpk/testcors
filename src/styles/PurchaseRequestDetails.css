@@ -1,13 +1,16 @@
+/*
+
 .custom-modal-width .modal-dialog {
-  max-width: 1400px;
-  position: fixed;
+  width: 1400px !important;
+  position: absolute;
 }
 
 .custom-container {
   padding: 1rem;
   border-radius: 8px;
-  /*background: linear-gradient(to bottom, #d7d9d9, #e9ecef);*/
+  /*background: linear-gradient(to bottom, #d7d9d9, #e9ecef);
   background-color: #fff;
+  width: 800px;
 }
 
 .custom-header {
@@ -35,6 +38,7 @@
 .custom-body .table td:first-child {
   font-weight: bold;
   color: #666;
+
 }
 
 .custom-footer .btn {
@@ -58,3 +62,4 @@
 }
 
 
+*/

@@ -4,6 +4,7 @@ import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+import ProductModal from "./modal/ProductModal";
 
 interface Product {
   image: string;
@@ -20,6 +21,9 @@ interface Product {
 }
 
 function Products() {
+
+  
+  const [showDetails, setShowDetails] = useState<boolean>(false);
   const [rowData, setRowData] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const [stockLevels, setStockLevels] = useState(0);
@@ -164,7 +168,7 @@ function Products() {
         </div>
       </div>
       <div className="d-flex justify-content-end  m-3 align-items-center ">
-        <button className="btn blue d-flex align-items-center text-white rounded-xl w-56 text-lg font-semibold inter p-3  gap-4 align-items-lg-center">
+        <button className="btn blue d-flex align-items-center text-white rounded-xl w-52 text-lg font-semibold inter p-3  gap-4 align-items-lg-center" onClick={() => setShowDetails(true)}>
           Add Products
           <img src="./add.png" alt="add.png" />
         </button>
@@ -182,6 +186,7 @@ function Products() {
           onGridReady={(params) => params.api.sizeColumnsToFit()}
         />
       </div>
+      <ProductModal show={showDetails} onHide={() => setShowDetails(false)} />
     </>
   );
 }

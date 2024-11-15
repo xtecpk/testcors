@@ -15,6 +15,8 @@ interface SummaryData {
 }
 
 function LabCards() {
+
+
   const [activeCard, setActiveCard] = useState<string>("Label");
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null); // The type is either SummaryData or null initially
   const [loading, setLoading] = useState<boolean>(true);

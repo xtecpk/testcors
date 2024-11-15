@@ -4,7 +4,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import Common from "../modal/Common";
+import Common from "./modal/Common";
 
 interface CategoryData {
   no: number;
@@ -22,6 +22,7 @@ function DamageAndDefects() {
   const [rowData, setRowData] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   const columnDefs: ColDef[] = [
     { field: "no", flex: 1, headerName: "No.", filter: "agTextColumnFilter", floatingFilter: true },
@@ -30,7 +31,17 @@ function DamageAndDefects() {
     { field: "department", flex: 1, headerName: "Dept.", filter: "agTextColumnFilter", floatingFilter: true },
     { field: "location", flex: 1, headerName: "Location", filter: "agTextColumnFilter", floatingFilter: true },
     { field: "assigned", flex: 1, headerName: "Assigned", filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "status", flex: 1, headerName: "Status", filter: "agTextColumnFilter", floatingFilter: true },
+    {
+      field: "status",
+      flex: 1,
+      headerName: "Status",
+      filter: "agTextColumnFilter",
+      floatingFilter: true,
+      cellStyle: (params) => ({
+        color: params.value === "Approved" ? "green" : params.value === "Pending" ? "red" : "black",
+        textDecoration: "underline"
+      }),
+    },
     { field: "equipment", flex: 1, headerName: "Equipment", filter: "agTextColumnFilter", floatingFilter: true },
     { field: "tools", flex: 1, headerName: "Tools", filter: "agTextColumnFilter", floatingFilter: true },
   ];
@@ -42,7 +53,7 @@ function DamageAndDefects() {
       setError(null);
 
       try {
-        const response = await axios.get<CategoryData[]>("your_api");
+        const response = await axios.get<CategoryData[]>("your_api_url"); // Replace with actual API URL
         setRowData(response.data); // Update row data with API response
       } catch (error) {
         setError("Error fetching data. Please try again.");
@@ -54,14 +65,22 @@ function DamageAndDefects() {
     fetchData();
   }, []);
 
-  const [showDetails, setShowDetails] = useState(false);
+  const handleModalClose = (e: React.MouseEvent) => {
+    // If the click is outside the modal, close it
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
+    }
+  };
 
   return (
     <>
-      <div className="d-flex justify-content-end ">
-        <button className="btn blue text-white w-40 inter text-lg p-3 mr-6" onClick={()=>setShowDetails(true)}
-          >
-          Add Tasks
+      <div className="d-flex justify-content-end m-3 align-items-center mx-4">
+        <button
+          className="btn blue d-flex align-items-center rounded-xl w-54 text-white text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
+          onClick={() => setShowDetails(true)}  // Show the modal when clicked
+        >
+          Add Damage and Defects
+          <img src="./add.png" alt="add.png" />
         </button>
       </div>
       {/* Table */}
@@ -80,7 +99,7 @@ function DamageAndDefects() {
           />
         )}
       </div>
-      <Common show={showDetails} onHide={()=>setShowDetails(false)} />
+      <Common show={showDetails} onHide={handleModalClose} />  {/* Pass the close handler to Common */}
     </>
   );
 }

@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import CategorieModal from "./modal/CategorieModal";
 
 // Define a TypeScript interface for the row data
 interface CategoryData {
@@ -14,6 +15,8 @@ interface CategoryData {
 }
 
 function Categories() {
+
+  const [showDetails, setShowDetails] = useState<boolean>(false);
   const [summaryData, setSummaryData] = useState({
     totalCategories: 0,
     topCategoriesStock: 0,
@@ -82,7 +85,7 @@ function Categories() {
         </div>
       </div>
       <div className="d-flex justify-content-end  m-3 align-items-center">
-        <button className="btn blue d-flex align-items-center text-white rounded-xl w-56 text-lg font-semibold inter p-3  gap-4 align-items-lg-center">
+        <button className="btn blue d-flex align-items-center text-white rounded-xl w-56 text-lg font-semibold inter p-3  gap-4 align-items-lg-center" onClick={() => setShowDetails(true)}>
           Add Categories
           <img src="./add.png" alt="add.png" />
         </button>
@@ -98,7 +101,7 @@ function Categories() {
           onGridReady={(params) => params.api.sizeColumnsToFit()}
         />
       </div>
-
+      <CategorieModal show={showDetails} onHide={() => setShowDetails(false)} />
     </>
   );
 }

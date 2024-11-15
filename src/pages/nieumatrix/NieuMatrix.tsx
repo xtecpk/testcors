@@ -6,7 +6,7 @@ import LsaFfe from "./lsa & ffe​/LsaFfe";
 import PlanedMaintenance from "./Planned-maintenance/PlanedMaintenance";
 
 function NieuMatrix() {
-  const [activeCard, setActiveCard] = useState<string>("");
+  const [activeCard, setActiveCard] = useState<string>("Damage and Defects"); // Set default card
   const [counts, setCounts] = useState({
     damageAndDefects: 0,
     plannedMaintenance: 0,
@@ -44,20 +44,20 @@ function NieuMatrix() {
       <div className="container-fluid min-vh-100">
         <h3 className="mb-4 text-black ubuntu fw-bold text-3xl">NIEUMATRIX</h3>
         <div className="container-fluid">
-          <div className="row ">
+          <div className="row">
             <div
               className="col"
               onClick={() => handleCardClick("Damage and Defects")}
               style={{ cursor: "pointer" }}
             >
               <div
-                className={`flex flex-col w-12/12 h-32 m-2 p-6 border rounded-lg cursor-pointer transition-all duration-300 
-                shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold  ${
-                activeCard === "Damage and Defects" ? "blue text-white" : "bg-light"
-                }`} 
+                className={`flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
+                shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold ${
+                  activeCard === "Damage and Defects" ? "blue text-white" : "bg-light"
+                }`}
               >
                 Damage and Defects <br />
-                <strong className="mt-1">{counts.damageAndDefects}158</strong>
+                <strong className="mt-1">{counts.damageAndDefects}</strong>
               </div>
             </div>
             <div
@@ -66,10 +66,10 @@ function NieuMatrix() {
               style={{ cursor: "pointer" }}
             >
               <div
-                className={`flex flex-col w-12/12 h-32 m-2 p-6 border rounded-lg cursor-pointer transition-all duration-300 
-                shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold  ${
-                activeCard === "Planned Maintenance" ? "blue text-white" : "bg-light"
-                }`} 
+                className={`flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
+                shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold ${
+                  activeCard === "Planned Maintenance" ? "blue text-white" : "bg-light"
+                }`}
               >
                 Planned Maintenance <br />
                 <strong className="mt-1">{counts.plannedMaintenance}</strong>
@@ -81,10 +81,10 @@ function NieuMatrix() {
               style={{ cursor: "pointer" }}
             >
               <div
-                className={`flex flex-col w-12/12 h-32 m-2 p-6 border rounded-lg cursor-pointer transition-all duration-300 
+                className={`flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold ${
-                activeCard === "Forward Planning" ? "blue text-white" : "bg-light"
-                }`} 
+                  activeCard === "Forward Planning" ? "blue text-white" : "bg-light"
+                }`}
               >
                 Forward Planning <br />
                 <strong className="mt-1">{counts.forwardPlanning}</strong>
@@ -96,10 +96,10 @@ function NieuMatrix() {
               style={{ cursor: "pointer" }}
             >
               <div
-                className={`flex flex-col w-12/12 h-32 m-2 p-6 border rounded-lg cursor-pointer transition-all duration-300 
-                shadow-lg hover:shadow-xl transform hover:scale-105 text-start inter bg-white text-lg font-semibold  ${
-                activeCard === "LSA & FFE" ? "blue text-white" : "bg-light"
-                }`} 
+                className={`flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
+                shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold ${
+                  activeCard === "LSA & FFE" ? "blue text-white" : "bg-light"
+                }`}
               >
                 LSA & FFE <br />
                 <strong className="mt-1">{counts.lsaFfe}</strong>
