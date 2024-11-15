@@ -23,6 +23,7 @@ function LsaFfe() {
   const [rowData, setRowData] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
   
   useEffect(() => {
     // Fetch data from API
@@ -65,8 +66,14 @@ function LsaFfe() {
     { field: "equipment", flex: 1, headerName: "Equipment", filter: "agTextColumnFilter", floatingFilter: true },
     { field: "tools", flex: 1, headerName: "Tools", filter: "agTextColumnFilter", floatingFilter: true },
   ];
+  
+  const handleModalClose = (e: React.MouseEvent) => {
+    // If the click is outside the modal, close it
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
+    }
+  };
 
-  const [showDetails, setShowDetails] = useState(false);
 
   return (
     <>
@@ -98,7 +105,7 @@ function LsaFfe() {
       )}
       
       {/* Modal */}
-      <LsaModal show={showDetails} onHide={() => setShowDetails(false)} />
+      <LsaModal show={showDetails} onHide={handleModalClose} />
     </>
   );
 }

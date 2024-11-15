@@ -49,6 +49,13 @@ function PlanedMaintenance() {
     { field: "rankAccessLevel", flex: 1, headerName: "Rank Access Level", filter: "agTextColumnFilter", floatingFilter: true },
   ];
 
+  const handleModalClose = (e: React.MouseEvent) => {
+    // If the click is outside the modal, close it
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
+    }
+  };
+
   return (
     <>
       <div className="d-flex justify-content-end m-3 align-items-center mx-4">
@@ -71,7 +78,7 @@ function PlanedMaintenance() {
         />
       </div>
 
-      <PlanedModel show={showDetails} onHide={() => setShowDetails(false)} />
+      <PlanedModel show={showDetails} onHide={handleModalClose} />
     </>
   );
 }

@@ -1,55 +1,68 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import axios for type checking
+import axiosInstance from '../../../axiosInstance'; // Adjust the path as needed
 
 interface LoginProps {
-  setAuth: React.Dispatch<React.SetStateAction<boolean>>;
+  onAuthenticate: (authenticated: boolean) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ setAuth }) => {
-  const [email, setEmail] = useState('');
+const Login: React.FC<LoginProps> = ({ onAuthenticate }) => {
+  const [employeeid, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const response = await axiosInstance.post('/auth/signin', { employeeid, password });
+      localStorage.setItem('token', response.data.token);
+      onAuthenticate(true); 
+      navigate('/NIEUDASH'); 
+    } catch (error) {
+      console.error('Error signing in:', error);
 
-    // Dummy login check (replace with real API check later)
-    if (email === 'test@example.com' && password === 'password') {
-      setAuth(true); // Set authentication to true
-      navigate('/NIEUDASH'); // Redirect to dashboard
-    } else {
-      setErrorMessage('Invalid email or password. Please try again.');
+      // Check if error is an AxiosError
+      if (axios.isAxiosError(error) && error.response) {
+        setErrorMessage(error.response.data.message || 'Invalid credentials');
+      } else {
+        setErrorMessage('Something went wrong. Please try again.');
+      }
     }
   };
 
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-[#f1f1f1]">
-      <div className="row shadow-gray-500  w-75 h-75 rounded-xl " id="login-card">
-        <div className="col-md-6 d-flex flex-column align-items-center justify-content-center blue text-white p-4 rounded-start shadow-2xl shadow-gray-500">
+      <div className="row shadow-gray-500 w-75 h-75 rounded-xl" id="login-card">
+        {/* Left Section */}
+        <div className="col-md-6 d-flex flex-column align-items-center justify-content-center blue text-white p-4 rounded-start shadow-2xl">
           <div className="logo mb-4">
-            <img src="./logo.png" alt="App Logo" className="w-80"  />
+            <img src="./logo.png" alt="App Logo" className="w-80" />
           </div>
         </div>
-        <div className="col-md-6 p-5 d-flex flex-column align-items-center justify-content-center bg-white rounded-e-xl shadow-2xl ">
+        {/* Right Section */}
+        <div className="col-md-6 p-5 d-flex flex-column align-items-center justify-content-center bg-white rounded-end-xl shadow-2xl">
           <div className="text-center mb-4">
             <h4 className="mb-3 text-2xl font-bold text-black">Login</h4>
-            <p className="text-black text-lg font-semibold">Access your dashboard with your credentials.</p>
+            <p className="text-black text-lg font-semibold">
+              Access your dashboard with your credentials.
+            </p>
           </div>
-          <form className="w-96"  onSubmit={handleSubmit}>
+          <form className="w-96" onSubmit={handleSignIn}>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label fw-bold">
-                Email Address:
+              <label htmlFor="employeeid" className="form-label fw-bold">
+                Employee ID:
               </label>
               <input
-                type="email"
-                id="email"
+                type="text"
+                id="employeeid"
                 className="form-control"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your employee ID"
+                value={employeeid}
+                onChange={(e) => setEmployeeId(e.target.value)}
                 required
-                aria-label="Email Address"
+                aria-label="Employee ID"
               />
             </div>
             <div className="mb-3">

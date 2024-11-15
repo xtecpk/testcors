@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Modal } from "react-bootstrap";
 
 interface LsaModalProps {
   show: boolean;
-  onHide: () => void;
+  onHide: (e: React.MouseEvent) => void;
 }
 
 const LsaModal: React.FC<LsaModalProps> = ({ show, onHide }) => {
@@ -51,7 +50,6 @@ const LsaModal: React.FC<LsaModalProps> = ({ show, onHide }) => {
         setAssignees("");
         setDeadline("");
         setError(null); // Clear any previous errors
-        onHide(); // Close the modal
       } else {
         // If the API responds with an error, set the error message
         const errorMessage = await response.text();
@@ -68,19 +66,24 @@ const LsaModal: React.FC<LsaModalProps> = ({ show, onHide }) => {
 
   return (
     <>
-      <Modal
-        show={show}
-        onHide={onHide}
-        centered
-        dialogClassName="custom-modal-width"
+{show && (
+  <div
+  id="authentication-modal"
+  tabIndex={-1}
+  aria-hidden="true"
+  className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50"
+  onClick={onHide} 
+>
+    <div
+        className="relative p-4 w-[1000px] rounded-lg "
+        onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
       >
-        <div className="custom-container ">
-          <div className="custom-body1 p-3">
-            {error && (
-              <div className="alert alert-danger text-center">{error}</div>
-            )}{" "}
-            {/* Display error if present */}
-            <div className="row">
+      {/* Modal content */}
+      <div className="relative bg-white w-[1000px] rounded-lg shadow dark:bg-gray-700">
+          {/* Modal body */}
+        {error && <div className="alert alert-danger text-center">{error}</div>}
+        <div className="p-4">
+        <div className="row">
               <div className="col">
                 <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
                   Title:
@@ -192,11 +195,14 @@ const LsaModal: React.FC<LsaModalProps> = ({ show, onHide }) => {
                 Add
               </button>
             </div>
-          </div>
-        </div>
-      </Modal>
-    </>
+      </div></div></div>
+    </div>
+  )}
+</>
   );
 };
 
 export default LsaModal;
+
+
+

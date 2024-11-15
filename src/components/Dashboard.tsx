@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import Dashboard1 from '../pages/neiudash/Dash';
 import Neiuprocure from '../pages/neiuprocure/Nieuprocure';
 import NieuFinance from '../pages/nieufinance/NieuFinance';
@@ -22,23 +22,39 @@ import NieuMatrix from '../pages/nieumatrix/NieuMatrix';
 import NieuStock from '../pages/nieustock/NieuStock';
 import Login from './authencation/log-in/Login';
 
+const isAuthenticated = (): boolean => {
+  return !!localStorage.getItem('token');
+};
+
+const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 const Dashboard: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleSidebarToggle = (isOpen: boolean) => {
     setIsSidebarOpen(isOpen);
   };
 
+  useEffect(() => {
+    // Initialization or side effects if needed
+  }, []);
+
   return (
     <Router>
       <Routes>
-        {!isAuthenticated ? (
-          <Route path="*" element={<Login setAuth={setIsAuthenticated} />} />
-        ) : (
-          <Route
-            path="*"
-            element={
+        {/* Login Route */}
+        <Route path="/login" element={<Login onAuthenticate={() => {}} />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="*"
+          element={
+            <ProtectedRoute>
               <div className="d-flex bg-blue-500">
                 <Sidebar onSidebarToggle={handleSidebarToggle} />
                 <div
@@ -57,6 +73,7 @@ const Dashboard: React.FC = () => {
                     }}
                   >
                     <Routes>
+                      {/* Define all protected routes here */}
                       <Route path="/NIEUDASH" element={<Dashboard1 />} />
                       <Route path="/NIEUPROCURE" element={<Neiuprocure />} />
                       <Route path="/NIEUSTOCK" element={<NieuStock />} />
@@ -78,9 +95,9 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-            }
-          />
-        )}
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
