@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios for type checking
-import axiosInstance from '../../../axiosInstance'; // Adjust the path as needed
+import Cookies from 'js-cookie';
+import axiosInstance from '../../../axiosInstance';
+import axios from "axios";
 
 interface LoginProps {
   onAuthenticate: (authenticated: boolean) => void;
@@ -14,23 +15,27 @@ const Login: React.FC<LoginProps> = ({ onAuthenticate }) => {
   const navigate = useNavigate();
 
   const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axiosInstance.post('/auth/signin', { employeeid, password });
-      localStorage.setItem('token', response.data.token);
-      onAuthenticate(true); 
-      navigate('/NIEUDASH'); 
-    } catch (error) {
-      console.error('Error signing in:', error);
+  e.preventDefault();
+  try {
+    const response = await axiosInstance.post('/auth/signin', { employeeid, password });
 
-      // Check if error is an AxiosError
-      if (axios.isAxiosError(error) && error.response) {
-        setErrorMessage(error.response.data.message || 'Invalid credentials');
-      } else {
-        setErrorMessage('Something went wrong. Please try again.');
-      }
+    // Set cookies with 30-minute expiration
+    const expirationDate = new Date(new Date().getTime() + 30 * 60 * 1000);
+    Cookies.set('authToken', response.data.token, { expires: expirationDate, path: '/' });
+    Cookies.set('employeeId', employeeid, { expires: expirationDate, path: '/' });
+
+    onAuthenticate(true);
+    navigate('/NIEUDASH');
+  } catch (error: unknown) {
+    console.error('Error signing in:', error);
+
+    if (axios.isAxiosError(error) && error.response) {
+      setErrorMessage(error.response.data.message || 'Invalid credentials');
+    } else {
+      setErrorMessage('Something went wrong. Please try again.');
     }
-  };
+  }
+};
 
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-[#f1f1f1]">

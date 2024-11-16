@@ -31,7 +31,7 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
     };
 
     try {
-      const response = await fetch("YOUR_API_ENDPOINT", { // Replace with actual API endpoint
+      const response = await fetch("YOUR_API_ENDPOINT", { 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +40,6 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
       });
 
       if (response.ok) {
-        // Reset form fields and close the modal on successful submission
         setTitle("");
         setDescription("");
         setLocation("");
@@ -184,3 +183,8 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
 };
 
 export default Common;
+
+
+
+
+

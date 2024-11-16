@@ -1,13 +1,15 @@
-import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-interface PrivateRouteProps {
-  children: ReactNode;
-}
-
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const token = localStorage.getItem('token');
-  return token ? <>{children}</> : <Navigate to="/login" />;
+const isAuthenticated = (): boolean => {
+  return !!Cookies.get('authToken'); // Check if the authToken cookie exists
 };
 
-export default PrivateRoute;
+const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+export default ProtectedRoute;

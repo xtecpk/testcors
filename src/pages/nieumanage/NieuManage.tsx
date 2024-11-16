@@ -78,6 +78,13 @@ function NieuManage() {
     }
   };
 
+  const handleModalClose = (e: React.MouseEvent) => {
+    // If the click is outside the modal, close it
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
+    }
+  };
+
   return (
     <>
       <div className="container-fluid min-vh-100">
@@ -138,7 +145,7 @@ function NieuManage() {
           </div>
         </div>
       </div>
-      <AddManage show={showDetails} onHide={() => setShowDetails(false)} />
+      <AddManage show={showDetails} onHide={handleModalClose} />
     </>
   );
 }

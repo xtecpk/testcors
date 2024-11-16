@@ -77,7 +77,7 @@ function DamageAndDefects() {
       <div className="d-flex justify-content-end m-3 align-items-center mx-4">
         <button
           className="btn blue d-flex align-items-center rounded-xl w-54 text-white text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
-          onClick={() => setShowDetails(true)}  // Show the modal when clicked
+          onClick={() => setShowDetails(true)}  
         >
           Add Damage and Defects
           <img src="./add.png" alt="add.png" />
@@ -99,7 +99,7 @@ function DamageAndDefects() {
           />
         )}
       </div>
-      <Common show={showDetails} onHide={handleModalClose} />  {/* Pass the close handler to Common */}
+      <Common show={showDetails} onHide={handleModalClose} />  
     </>
   );
 }

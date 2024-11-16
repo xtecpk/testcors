@@ -184,7 +184,6 @@ const PlanedModel: React.FC<PlanedModalProps> = ({ show, onHide }) => {
                     />
                   </div>
                 </div>
-              </div>
               <div className="row">
                 <div className="col-6">
                   <label className="inter fw-bold pt-2 pb-2">Assignees:</label>
@@ -217,6 +216,7 @@ const PlanedModel: React.FC<PlanedModalProps> = ({ show, onHide }) => {
               </div>
             </div>
           </div>
+        </div>
         </div>
       )}
     </>

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import {  Modal } from "react-bootstrap";
 import axios from "axios";
 
 
 interface AdminModalProps {
   show: boolean;
-  onHide: () => void;
+  onHide: (e: React.MouseEvent) => void;
 }
 
 const AdminModal: React.FC<AdminModalProps> = ({ show, onHide }) => {
@@ -26,7 +25,6 @@ const AdminModal: React.FC<AdminModalProps> = ({ show, onHide }) => {
 
     try {
       await axios.post("YOUR_API_ENDPOINT", data);
-      onHide();
       setUserName("");
       setRole("");
       setEmail("");
@@ -37,16 +35,25 @@ const AdminModal: React.FC<AdminModalProps> = ({ show, onHide }) => {
   };
 
   return (
-    <>
-    <Modal className=""
-      show={show}
-      onHide={onHide}
-      centered
-      dialogClassName="custom-modal-width"
-    >
-      <div className="custom-container">
-        <div className="custom-body1 p-4 ">
-          <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
+<>
+      {show && (
+        <div
+          id="authentication-modal"
+          tabIndex={-1}
+          aria-hidden="true"
+          className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50"
+          onClick={onHide} 
+        >
+          <div
+            className="relative p-4 w-[1000px] rounded-lg "
+            onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
+          >
+            {/* Modal content */}
+            <div className="relative bg-white w-[1000px] rounded-lg shadow dark:bg-gray-700">
+              {/* Modal body */}
+              {error && <div className="alert alert-danger text-center">{error}</div>}
+              <div className="p-4">
+              <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
             User Name:
 
           </label>
@@ -78,11 +85,18 @@ const AdminModal: React.FC<AdminModalProps> = ({ show, onHide }) => {
         <div className="text-center mt-3">
             <button className=" blue w-52 p-2 px-40 rounded-lg text-white mb-3 font-semibold inter" onClick={handleSubmit}>Add</button>
         </div>
-
-      </div>
-    </Modal>
+              </div>
+            </div>
+          </div>
+      )}
     </>
   );
 };
 
 export default AdminModal;
+
+
+
+
+
+
