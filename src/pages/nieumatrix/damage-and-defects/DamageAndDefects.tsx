@@ -53,7 +53,7 @@ function DamageAndDefects() {
       setError(null);
 
       try {
-        const response = await axios.get<CategoryData[]>("your_api_url"); // Replace with actual API URL
+        const response = await axios.get<CategoryData[]>("http://localhost:4572/api/task/getalltasks"); // Replace with actual API URL
         setRowData(response.data); // Update row data with API response
       } catch (error) {
         setError("Error fetching data. Please try again.");

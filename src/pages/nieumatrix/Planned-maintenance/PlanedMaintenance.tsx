@@ -68,7 +68,7 @@ function PlanedMaintenance() {
         </button>
       </div>
       
-      <div className="ag-theme-quartz mt-3" style={{ height: "500px", width: "100%" }}>
+      <div className="ag-theme-quartz mt-3" style={{ height: "600px", width: "100%" }}>
         <AgGridReact<DepartmentData>
           rowData={rowData}
           columnDefs={columnDefs}

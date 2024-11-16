@@ -60,8 +60,8 @@ function Categories() {
     <>
     
       {/* Summary Cards */}
-      <div className="container-fluid">
-        <div className="row gap-12 px-5">
+      <div className="container-fluid ">
+        <div className="row gap-12 px-5 ">
           <div className="col flex flex-col w-10/12 h-32 m-2 p-6  rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
               Total Categories <br />
@@ -92,7 +92,7 @@ function Categories() {
       </div>
 
       {/* Categories Table */}
-      <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
+      <div className="ag-theme-quartz " style={{ height: "500px", width: "100%" }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}

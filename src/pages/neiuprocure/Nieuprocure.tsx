@@ -142,7 +142,7 @@ function Neiuprocure() {
           </div>
 
           {/* Table Section */}
-          <div className="ag-theme-quartz mt-3" style={{ height: "500px", width: "100%" }}>
+          <div className="ag-theme-quartz mt-3" style={{ height: "600px", width: "100%" }}>
             {loading ? (
               <div>Loading...</div>
             ) : error ? (
@@ -152,7 +152,7 @@ function Neiuprocure() {
                 rowData={rowData}
                 columnDefs={columnDefs}
                 pagination={true}
-                paginationPageSize={5}
+                paginationPageSize={10}
                 onGridReady={(params) => params.api.sizeColumnsToFit()}
               />
             )}

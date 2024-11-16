@@ -1,11 +1,14 @@
 import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 const isAuthenticated = (): boolean => {
-  return !!Cookies.get('authToken'); // Check if the authToken cookie exists
+  return !!localStorage.getItem('token');
 };
 
-const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+interface ProtectedRouteProps {
+  children: JSX.Element;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace />;
   }

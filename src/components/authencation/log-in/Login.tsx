@@ -1,41 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import axiosInstance from '../../../axiosInstance';
-import axios from "axios";
 
-interface LoginProps {
-  onAuthenticate: (authenticated: boolean) => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onAuthenticate }) => {
+const Login: React.FC = () => {
   const [employeeid, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSignIn = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const response = await axiosInstance.post('/auth/signin', { employeeid, password });
-
-    // Set cookies with 30-minute expiration
-    const expirationDate = new Date(new Date().getTime() + 30 * 60 * 1000);
-    Cookies.set('authToken', response.data.token, { expires: expirationDate, path: '/' });
-    Cookies.set('employeeId', employeeid, { expires: expirationDate, path: '/' });
-
-    onAuthenticate(true);
-    navigate('/NIEUDASH');
-  } catch (error: unknown) {
-    console.error('Error signing in:', error);
-
-    if (axios.isAxiosError(error) && error.response) {
-      setErrorMessage(error.response.data.message || 'Invalid credentials');
-    } else {
-      setErrorMessage('Something went wrong. Please try again.');
+  // Check if the user is already logged in on page load
+  useEffect(() => {
+    const authToken = localStorage.getItem('token');
+    if (authToken) {
+      navigate('/NIEUDASH'); // Redirect to dashboard if already logged in
     }
-  }
-};
+  }, [navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    // Basic validation
+    if (!employeeid.trim() || !password.trim()) {
+      setErrorMessage('Please fill in both Employee ID and Password.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:4572/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ employeeid, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      // Parse the response body
+      const responseBody = await response.json();
+
+      // Log status and body for debugging
+      console.log('Response status:', response.status);
+      console.log('Response body:', responseBody);
+
+      if (!response.ok) {
+        // Handle API-specific error messages
+        setErrorMessage(responseBody.message || 'Login failed. Please try again.');
+        return;
+      }
+
+      // Handle successful login
+      if (responseBody && responseBody.token) {
+        // Save token and redirect
+        localStorage.setItem('token', responseBody.token);
+        navigate('/NIEUDASH'); // Redirect to dashboard
+      } else {
+        setErrorMessage('Unexpected error. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setErrorMessage('Network error. Please check your connection.');
+    }
+  };
 
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-[#f1f1f1]">
@@ -54,7 +76,7 @@ const Login: React.FC<LoginProps> = ({ onAuthenticate }) => {
               Access your dashboard with your credentials.
             </p>
           </div>
-          <form className="w-96" onSubmit={handleSignIn}>
+          <form className="w-96" onSubmit={handleLogin}>
             <div className="mb-3">
               <label htmlFor="employeeid" className="form-label fw-bold">
                 Employee ID:

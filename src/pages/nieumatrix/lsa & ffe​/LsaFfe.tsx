@@ -93,12 +93,12 @@ function LsaFfe() {
       {loading ? (
         <div>Loading tasks...</div>
       ) : (
-        <div className="ag-theme-quartz mt-3" style={{ height: "500px", width: "100%" }}>
+        <div className="ag-theme-quartz mt-3" style={{ height: "600px", width: "100%" }}>
           <AgGridReact
             rowData={rowData}
             columnDefs={columnDefs}
             pagination={true}
-            paginationPageSize={5}
+            paginationPageSize={10}
             onGridReady={(params) => params.api.sizeColumnsToFit()}
           />
         </div>
