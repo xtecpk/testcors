@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ChipModal from "./chip/ChipModal"; // Ensure this path is correct
 
 interface CommonProps {
   show: boolean;
@@ -16,6 +17,7 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
   const [assignees, setAssignees] = useState("");
   const [deadline, setDeadline] = useState("");
   const [error, setError] = useState<string | null>(null); 
+  const [showDetails, setShowDetails] = useState(false); // State to show the ChipModal
 
   // Handle form submission
   const handleSubmit = async () => {
@@ -58,6 +60,13 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
       // Handle any other errors that occur during fetch
       setError("An error occurred while submitting the form. Please try again.");
       console.error("Error:", error);
+    }
+  };
+
+  // Function to handle the closing of the modal
+  const handleModalClose = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
     }
   };
 
@@ -111,6 +120,7 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
                       placeholder="Enter Location"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
+                      onClick={() => setShowDetails(true)} // Open the ChipModal when clicking location input
                     />
                   </div>
                   <div className="col-6">
@@ -178,13 +188,10 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
           </div>
         </div>
       )}
+      {/* ChipModal */}
+      <ChipModal show={showDetails} onHide={handleModalClose} />
     </>
   );
 };
 
 export default Common;
-
-
-
-
-

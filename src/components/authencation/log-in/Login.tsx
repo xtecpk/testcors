@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axiosInstance from '../../../axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
@@ -11,7 +12,7 @@ const Login: React.FC = () => {
   useEffect(() => {
     const authToken = localStorage.getItem('token');
     if (authToken) {
-      navigate('/NIEUDASH'); // Redirect to dashboard if already logged in
+      navigate('/NIEUDASH'); 
     }
   }, [navigate]);
 
@@ -26,29 +27,26 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:4572/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ employeeid, password }),
-        headers: { 'Content-Type': 'application/json' },
+  
+      const response = await axiosInstance.post('auth/login', {
+        employeeid,
+        password
       });
 
-      // Parse the response body
-      const responseBody = await response.json();
-
-      // Log status and body for debugging
+    
       console.log('Response status:', response.status);
-      console.log('Response body:', responseBody);
+      console.log('Response body:', response.data);
 
-      if (!response.ok) {
-        // Handle API-specific error messages
-        setErrorMessage(responseBody.message || 'Login failed. Please try again.');
+      if (response.status !== 200) {
+
+        setErrorMessage(response.data.message || 'Login failed. Please try again.');
         return;
       }
 
       // Handle successful login
-      if (responseBody && responseBody.token) {
+      if (response.data && response.data.token) {
         // Save token and redirect
-        localStorage.setItem('token', responseBody.token);
+        localStorage.setItem('token', response.data.token);
         navigate('/NIEUDASH'); // Redirect to dashboard
       } else {
         setErrorMessage('Unexpected error. Please try again later.');
