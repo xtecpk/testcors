@@ -58,7 +58,9 @@ const Login: React.FC = () => {
   };
 
   return (
+    <>
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-[#f1f1f1]">
+      
       <div className="row shadow-gray-500 w-75 h-75 rounded-xl" id="login-card">
         {/* Left Section */}
         <div className="col-md-6 d-flex flex-column align-items-center justify-content-center blue text-white p-4 rounded-start shadow-2xl">
@@ -68,6 +70,7 @@ const Login: React.FC = () => {
         </div>
         {/* Right Section */}
         <div className="col-md-6 p-5 d-flex flex-column align-items-center justify-content-center bg-white rounded-end-xl shadow-2xl">
+          
           <div className="text-center mb-4">
             <h4 className="mb-3 text-2xl font-bold text-black">Login</h4>
             <p className="text-black text-lg font-semibold">
@@ -118,10 +121,12 @@ const Login: React.FC = () => {
             <p>
               Don't have an account? <Link to="/signup">Sign Up</Link>
             </p>
+            <p className='mt-10'>version 1.0</p>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 };
 
