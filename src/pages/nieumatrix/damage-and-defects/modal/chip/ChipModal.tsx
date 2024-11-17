@@ -59,7 +59,6 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
       subZoneId,
     };
     console.log(formData);
-    onHide(new MouseEvent("click")); // Close the modal
   };
 
 
@@ -83,7 +82,7 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 <label className="inter fw-bold pt-2 pb-2">Title:</label>
                 <input
                   type="text"
-                  className="form-control input"
+                  className="form-control input bg-white"
                   placeholder="Enter Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -100,11 +99,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 />
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">ParentID</label>
+                <label className="inter fw-bold pt-2 pb-2">Parent ID</label>
                 <select
                   value={parentId}
                   onChange={(e) => setParentId(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -122,22 +121,22 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 <select
                   value={parentId}
                   onChange={(e) => setType(e.target.value)}
-                  className="form-select "
+                  className="form-select input "
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
-                    <option key={index} value={option}>
+                    <option key={index} value={option} className="input">
                       {option}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">svgX</label>
+                <label className="inter fw-bold pt-2 pb-2">Svg X</label>
                 <select
                   value={parentId}
                   onChange={(e) => setSvgx(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -148,11 +147,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">svgy</label>
+                <label className="inter fw-bold pt-2 pb-2">Svg Y</label>
                 <select
                   value={parentId}
                   onChange={(e) => setSvgy(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -165,11 +164,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
             </div>
             <div className="row">
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">svgPath</label>
+                <label className="inter fw-bold pt-2 pb-2">Svg Path</label>
                 <select
                   value={parentId}
                   onChange={(e) => setSvgPath(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -180,11 +179,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">width</label>
+                <label className="inter fw-bold pt-2 pb-2">Width</label>
                 <select
                   value={parentId}
                   onChange={(e) => setWidth(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -195,11 +194,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">height</label>
+                <label className="inter fw-bold pt-2 pb-2">Height</label>
                 <select
                   value={parentId}
                   onChange={(e) => setHeight(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -212,11 +211,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
             </div>
             <div className="row">
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">vessel</label>
+                <label className="inter fw-bold pt-2 pb-2">Vessel</label>
                 <select
                   value={parentId}
                   onChange={(e) => setVessel(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -227,11 +226,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">deckId</label>
+                <label className="inter fw-bold pt-2 pb-2">Deck Id</label>
                 <select
                   value={parentId}
                   onChange={(e) => setDeckId(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -242,11 +241,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">zoneId</label>
+                <label className="inter fw-bold pt-2 pb-2">Zone Id</label>
                 <select
                   value={parentId}
                   onChange={(e) => setZoneId(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -259,11 +258,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
             </div>
             <div className="row">
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">storageAreaId</label>
+                <label className="inter fw-bold pt-2 pb-2">Storage Area Id</label>
                 <select
                   value={parentId}
                   onChange={(e) => setStorageAreaId(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -274,11 +273,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">positionId</label>
+                <label className="inter fw-bold pt-2 pb-2">Position Id</label>
                 <select
                   value={parentId}
                   onChange={(e) => setPositionId(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -289,11 +288,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 </select>
               </div>
               <div className="col-4">
-                <label className="inter fw-bold pt-2 pb-2">placementId</label>
+                <label className="inter fw-bold pt-2 pb-2">Placement Id</label>
                 <select
                   value={parentId}
                   onChange={(e) => setPlacementId(e.target.value)}
-                  className="form-select"
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -306,11 +305,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
             </div>
             <div className="row">
               <div className="col-12">
-                <label className="inter fw-bold pt-2 pb-2">subZoneId</label>
+                <label className="inter fw-bold pt-2 pb-2">SubZone Id</label>
                 <select
                   value={parentId}
                   onChange={(e) => setSubZoneId(e.target.value)}
-                  className="form-select"
+                  className="form-select "
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (
@@ -324,14 +323,10 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
             {/* Save button */}
 
               <div className="text-center mt-3">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleSave}
-                >
-                  Save
-                </button>
-              </div>
+                  <button className="green w-48 p-2 px-40 rounded-lg text-white font-semibold inter" onClick={handleSave}>
+                    Add
+                  </button>
+                </div>
 
           </div>
         </div>
