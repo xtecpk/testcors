@@ -69,11 +69,11 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
         tabIndex={-1}
         aria-hidden="true"
         className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50 ml-4"
-        onClick={onHide} // Close modal when clicking on the overlay
+        onClick={onHide} 
       >
         <div
           className="relative p-4 max-w-full w-[1100px] mx-auto rounded-lg bg-white shadow-md"
-          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+          onClick={(e) => e.stopPropagation()} 
         >
           {/* Modal content */}
           <div className="text-start p-4">
@@ -309,7 +309,7 @@ const ChipModal: React.FC<ChipModalProps> = ({ show, onHide }) => {
                 <select
                   value={parentId}
                   onChange={(e) => setSubZoneId(e.target.value)}
-                  className="form-select "
+                  className="form-select input"
                   style={{ maxHeight: "150px", overflowY: "auto" }}
                 >
                   {options.map((option, index) => (

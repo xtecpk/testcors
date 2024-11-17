@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import Common from "./modal/Common";
+import axiosInstance from '../../../axiosInstance';
+
 
 interface CategoryData {
   no: number;
@@ -53,7 +54,7 @@ function DamageAndDefects() {
       setError(null);
 
       try {
-        const response = await axios.get<CategoryData[]>("http://localhost:4572/api/task/getalltasks"); // Replace with actual API URL
+        const response = await axiosInstance.get<CategoryData[]>("task/addTask"); // Replace with the actual endpoint
         setRowData(response.data); // Update row data with API response
       } catch (error) {
         setError("Error fetching data. Please try again.");

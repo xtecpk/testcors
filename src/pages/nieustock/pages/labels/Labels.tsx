@@ -5,6 +5,8 @@ import BoxInventoryLabel from "./cards/box-inventory-label/BoxInventoryLabel";
 import BoxLabel from "./cards/box-label/BoxLabel";
 import LockerIndiviualLevel from "./cards/locker-indiviual-level/LockerIndiviualLevel";
 import LockerProductList from "./cards/locker-product-list/LockerProductList";
+import axiosInstance from "../../../../axiosInstance";
+
 
 // Define the type for summary data
 interface SummaryData {
@@ -30,12 +32,8 @@ function LabCards() {
   useEffect(() => {
     const fetchSummaryData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/summary");
-        if (!response.ok) {
-          throw new Error("Failed to fetch summary data");
-        }
-        const data: SummaryData = await response.json();
-        setSummaryData(data);
+        const response = await axiosInstance.get("/api/summary"); // Use the Axios instance to make the request
+        setSummaryData(response.data); // Axios automatically parses the JSON, so no need for response.json()
         setLoading(false);
       } catch (error: unknown) {
         // Simply log the error, no need to set state for it.

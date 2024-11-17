@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     setErrorMessage('');
 
-    // Basic validation
+ 
     if (!employeeid.trim() || !password.trim()) {
       setErrorMessage('Please fill in both Employee ID and Password.');
       return;

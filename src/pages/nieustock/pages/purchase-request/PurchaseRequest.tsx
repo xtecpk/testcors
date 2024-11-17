@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import PurchaseModal from "./modal/PurchaseModal";
+import axiosInstance from "../../../../axiosInstance";
 
 // Define the CategoryData type
 interface CategoryData {
@@ -45,8 +45,8 @@ function PurchaseRequest() {
 
   const fetchSummaryData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/summary");
-      setSummaryData(response.data);
+      const response = await axiosInstance.get("/api/summary"); // Use the axiosInstance to make the request
+      setSummaryData(response.data); // Assuming the response contains the data you need
     } catch (error) {
       console.error("Error fetching summary data:", error);
     }
@@ -54,7 +54,7 @@ function PurchaseRequest() {
 
   const fetchTableData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/purchase-requests");
+      const response = await axiosInstance.get("purchase-requests");
       setRowData(response.data);
     } catch (error) {
       console.error("Error fetching table data:", error);

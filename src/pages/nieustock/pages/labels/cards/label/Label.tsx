@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "./../../../../../../axiosInstance";
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import "ag-grid-community/styles/ag-grid.css";
@@ -26,7 +26,7 @@ const Label = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/categories"); // Adjust the URL to your API endpoint
+        const response = await axiosInstance.get("/api/categories"); // Use the Axios instance to make the request
         setRowData(response.data); // Assuming the response contains the data you need
         setLoading(false);
       } catch (err) {
