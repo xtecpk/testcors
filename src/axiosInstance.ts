@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'ax
 
 // Create axios instance with base URL and headers
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:4572/api/', // API base URL
+    baseURL: 'https://nieucore.com/api/', // API base URL
     headers: {
         'Content-Type': 'application/json',
     },
