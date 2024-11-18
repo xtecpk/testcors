@@ -6,7 +6,6 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import Common from "./modal/Common";
 import axiosInstance from '../../../axiosInstance';
 
-
 interface CategoryData {
   no: number;
   taskTitle: string;
@@ -17,6 +16,18 @@ interface CategoryData {
   status: string;
   equipment: string;
   tools: string;
+}
+
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  primaryassigneeId: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  isDeleted: boolean;
 }
 
 function DamageAndDefects() {
@@ -40,7 +51,7 @@ function DamageAndDefects() {
       floatingFilter: true,
       cellStyle: (params) => ({
         color: params.value === "Approved" ? "green" : params.value === "Pending" ? "red" : "black",
-        textDecoration: "underline"
+        textDecoration: "underline",
       }),
     },
     { field: "equipment", flex: 1, headerName: "Equipment", filter: "agTextColumnFilter", floatingFilter: true },
@@ -48,14 +59,24 @@ function DamageAndDefects() {
   ];
 
   useEffect(() => {
-    // Fetch data from API
     const fetchData = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await axiosInstance.get<CategoryData[]>("task/addTask"); // Replace with the actual endpoint
-        setRowData(response.data); // Update row data with API response
+        const response = await axiosInstance.get<{ message: string; allTasks: Task[] }>("task/getalltasks");
+        const tasks = response.data.allTasks.map((task, index) => ({
+          no: index + 1,
+          taskTitle: task.title || "N/A",
+          description: task.description || "N/A",
+          department: "N/A", // Update if you have this info in the backend
+          location: "N/A", // Update if you have this info in the backend
+          assigned: `User ${task.primaryassigneeId || "N/A"}`,
+          status: task.status || "N/A",
+          equipment: "N/A", // Update if you have this info in the backend
+          tools: "N/A", // Update if you have this info in the backend
+        }));
+        setRowData(tasks);
       } catch (error) {
         setError("Error fetching data. Please try again.");
         console.error("Error fetching data:", error);
@@ -67,7 +88,6 @@ function DamageAndDefects() {
   }, []);
 
   const handleModalClose = (e: React.MouseEvent) => {
-    // If the click is outside the modal, close it
     if (e.target === e.currentTarget) {
       setShowDetails(false);
     }
@@ -84,7 +104,6 @@ function DamageAndDefects() {
           <img src="./add.png" alt="add.png" />
         </button>
       </div>
-      {/* Table */}
       <div className="ag-theme-quartz mt-3" style={{ height: "500px", width: "100%" }}>
         {loading ? (
           <div>Loading....</div>

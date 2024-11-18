@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // Create axios instance with base URL and headers
 const axiosInstance = axios.create({
-    baseURL: 'http://nieucore.com/api/', // API base URL
+    baseURL: 'http://localhost:4572/api/', // API base URL
     headers: {
         'Content-Type': 'application/json',
     },
@@ -10,29 +10,32 @@ const axiosInstance = axios.create({
 
 // Request interceptor to add Authorization header if token exists
 axiosInstance.interceptors.request.use(
-    (config) => {
+    (config: InternalAxiosRequestConfig) => {
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
-        // Log request for debugging
+        // Log request for debugging (be cautious with logging sensitive data)
         console.log('Request:', config);
         return config;
     },
-    (error) => {
+    (error: AxiosError) => {
+        // Handle request error
+        console.error('Request error:', error);
         return Promise.reject(error);
     }
 );
 
 // Response interceptor to handle errors globally
 axiosInstance.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
         // Log successful responses for debugging
         console.log('Response:', response);
         return response;
     },
-    (error) => {
+    (error: AxiosError) => {
         if (error.response) {
+            // Handle 401 Unauthorized: Remove token and redirect to login page
             if (error.response.status === 401) {
                 localStorage.removeItem('token');  
                 window.location.href = '/login';
@@ -41,9 +44,11 @@ axiosInstance.interceptors.response.use(
             }
             return Promise.reject(error.response);
         } else if (error.request) {
+            // Handle network error (no response received)
             console.error('Error request:', error.request);
             return Promise.reject(error.request);
         } else {
+            // Handle any other errors
             console.error('Error message:', error.message);
             return Promise.reject(error.message);
         }

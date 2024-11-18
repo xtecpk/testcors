@@ -2,10 +2,11 @@
 
 function Dashboard1() {
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to the dashboard page. Here you can see an overview of various statistics and features.</p>
-    </div>
+    <>
+      <div className="container-fluid min-vh-100">
+        <h3 className="mb-4 text-black ubuntu fw-bold text-3xl">NIEUDASH</h3>
+      </div>
+    </>
   );
 }
 

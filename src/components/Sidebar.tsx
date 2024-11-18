@@ -22,7 +22,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps) {
   };
 
   const menuItems = [
-    { to: "/NIEUUDASH", label: "NIEUUDASH", icon: "./home.png" },
+    { to: "/NIEUDASH", label: "NIEUUDASH", icon: "./home.png" },
     { to: "/NIEUPROCURE", label: "NIEUPROCURE", icon: "./Shopping Cart.png" },
     { to: "/NIEUSTOCK", label: "NIEUSTOCK", icon: "./Boxes.png" },
     { to: "/NIEUMATRIX", label: "NIEUMATRIX", icon: "./Boxes.png" },
