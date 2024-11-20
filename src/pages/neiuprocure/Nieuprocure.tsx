@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef, ICellRendererParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 
@@ -35,7 +35,7 @@ function Neiuprocure() {
       headerName: "Status",
       filter: "agTextColumnFilter",
       floatingFilter: true,
-      cellStyle: (params: any) => ({
+      cellStyle: (params) => ({
         color: params.value === "Approved" ? "green" : params.value === "Pending" ? "red" : "black",
         textDecoration: "underline",
       }),
@@ -46,7 +46,7 @@ function Neiuprocure() {
       field: "actions",
       flex: 1,
       headerName: "Actions",
-      cellRenderer: (params: any) => (
+      cellRenderer: (params: ICellRendererParams) => (
         <button
           className="btn btn-link"
           onClick={() => handleViewDetails(params.data)}
@@ -108,40 +108,41 @@ function Neiuprocure() {
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
                 All <br />
-                <strong className="mt-1">{totalRequests}</strong>
+                <strong>{totalRequests}</strong>
               </div>
             </div>
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
                 Rejected <br />
-                <strong className="mt-1">{rejectedRequests}</strong>
+                <strong>{rejectedRequests}</strong>
               </div>
             </div>
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
                 Approved <br />
-                <strong className="mt-1">{approvedRequests}</strong>
+                <strong>{approvedRequests}</strong>
               </div>
             </div>
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
                 Pending <br />
-                <strong className="mt-1">{pendingRequests}</strong>
+                <strong>{pendingRequests}</strong>
               </div>
             </div>
           </div>
-
           <div className="d-flex justify-content-end m-3 align-items-center">
-            <button className="btn blue d-flex align-items-center rounded-xl w-54 text-white text-lg font-semibold inter p-3 gap-4 align-items-lg-center">
+            <button
+              className="btn blue d-flex align-items-center rounded-xl w-54 text-white text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
+              
+            >
               Add & Manage
-              <img src="./add.png" alt="Add" />
+              <img src="./add.png" alt="add.png" />
             </button>
           </div>
 
-          {/* Table Section */}
           <div className="ag-theme-quartz mt-3" style={{ height: "600px", width: "100%" }}>
             {loading ? (
               <div>Loading...</div>
@@ -149,7 +150,7 @@ function Neiuprocure() {
               <div>{error}</div>
             ) : (
               <AgGridReact
-                rowData={rowData}
+                rowData={rowData.length ? rowData : null}
                 columnDefs={columnDefs}
                 pagination={true}
                 paginationPageSize={10}
@@ -158,7 +159,6 @@ function Neiuprocure() {
             )}
           </div>
 
-          {/* Inline Details Section */}
           {selectedRowData && (
             <div className="mt-4 p-3 border rounded bg-light">
               <h5>Request Details</h5>

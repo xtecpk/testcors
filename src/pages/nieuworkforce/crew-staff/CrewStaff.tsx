@@ -4,6 +4,7 @@ import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import  axiosInstance  from "../../../axiosInstance"; // Adjust the import path based on your Axios instance location
+import CrewStaffModal from "./modal/CrewStaffModal";
 
 interface CrewStaff {
   name: string;
@@ -20,6 +21,14 @@ function CrewStaff() {
   const [onLeave, setOnLeave] = useState<number>(0);
   const [newCrewMembers, setNewCrewMembers] = useState<number>(0);
   const [rowData, setRowData] = useState<CrewStaff[]>([]);
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+
+  const handleModalClose = (e: React.MouseEvent) => {
+    // If the click is outside the modal, close it
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
+    }
+  };
 
   const [columnDefs] = useState<ColDef<CrewStaff>[]>([
     {
@@ -122,7 +131,8 @@ function CrewStaff() {
       </div>
 
       <div className="d-flex justify-content-end  m-3 align-items-center ">
-        <button className="btn blue d-flex align-items-center text-white rounded-xl w-56 text-lg font-semibold inter p-3  gap-4 align-items-lg-center">
+        <button className="btn blue d-flex align-items-center text-white rounded-xl w-56 text-lg font-semibold inter p-3  gap-4 align-items-lg-center"
+        onClick={() => setShowDetails(true)}>
           Add Crew Staff
           <img src="./add.png" alt="add.png" />
         </button>
@@ -138,6 +148,7 @@ function CrewStaff() {
           onGridReady={(params) => params.api.sizeColumnsToFit()}
         />
       </div>
+      <CrewStaffModal show={showDetails} onHide={handleModalClose} />
     </>
   );
 }

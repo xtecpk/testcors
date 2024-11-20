@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef, CellEditingStoppedEvent } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import AdminModal from "./modal/AdminModal";
+import axiosInstance from "../../axiosInstance"; // Import your axios instance
 
 interface CategoryData {
   no: number;
@@ -40,7 +40,7 @@ function NieuAdmin() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("YOUR_API_ENDPOINT_FOR_TABLE_DATA");
+        const response = await axiosInstance.get("YOUR_API_ENDPOINT_FOR_TABLE_DATA");
         setRowData(response.data);
       } catch (error) {
         console.error("Failed to fetch table data:", error);
@@ -54,7 +54,7 @@ function NieuAdmin() {
   useEffect(() => {
     const fetchCardData = async () => {
       try {
-        const response = await axios.get("YOUR_API_ENDPOINT_FOR_CARD_DATA");
+        const response = await axiosInstance.get("YOUR_API_ENDPOINT_FOR_CARD_DATA");
         const { total, active, inactive, superAdmin } = response.data;
 
         setTotalUsers(total);
@@ -71,7 +71,7 @@ function NieuAdmin() {
   const handleCellEdit = async (params: CellEditingStoppedEvent) => {
     const updatedData = params.data as CategoryData;
     try {
-      await axios.put(`YOUR_API_ENDPOINT_FOR_UPDATE/${updatedData.no}`, updatedData);
+      await axiosInstance.put(`YOUR_API_ENDPOINT_FOR_UPDATE/${updatedData.no}`, updatedData);
       console.log("Data updated successfully:", updatedData);
     } catch (error) {
       console.error("Failed to update data:", error);
@@ -81,7 +81,7 @@ function NieuAdmin() {
   return (
     <>
       <div className="container-fluid min-vh-100">
-        <h3 className="mb-4 text-black ubuntu fw-bold text-3xl">NIEUMANAGE</h3>
+        <h3 className="mb-4 text-black ubuntu fw-bold text-3xl">NIEUADMIN</h3>
         <div className="container-fluid">
           <div className="row">
             <div className="col">
