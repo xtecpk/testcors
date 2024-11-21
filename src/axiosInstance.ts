@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import {jwtDecode} from 'jwt-decode'; 
 
 // Create axios instance with base URL and headers
 const axiosInstance = axios.create({
@@ -8,19 +9,25 @@ const axiosInstance = axios.create({
     },
 });
 
-// Request interceptor to add Authorization header if token exists
+// Function to check if the token is expired
+const isTokenExpired = (token: string): boolean => {
+    const { exp } = jwtDecode<{ exp: number }>(token);
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    return exp < currentTime;
+};
+
+// Request interceptor to add Authorization header if token exists and is not expired
 axiosInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         const token = localStorage.getItem('token');
-        if (token) {
+        if (token && !isTokenExpired(token)) {
             config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            localStorage.removeItem('token'); 
         }
-        // Log request for debugging (be cautious with logging sensitive data)
-        console.log('Request:', config);
         return config;
     },
     (error: AxiosError) => {
-        // Handle request error
         console.error('Request error:', error);
         return Promise.reject(error);
     }
@@ -28,30 +35,14 @@ axiosInstance.interceptors.request.use(
 
 // Response interceptor to handle errors globally
 axiosInstance.interceptors.response.use(
-    (response: AxiosResponse) => {
-        // Log successful responses for debugging
-        console.log('Response:', response);
-        return response;
-    },
+    (response: AxiosResponse) => response,
     (error: AxiosError) => {
-        if (error.response) {
-            // Handle 401 Unauthorized: Remove token and redirect to login page
-            if (error.response.status === 401) {
-                localStorage.removeItem('token');  
-                window.location.href = '/login';
-            } else {
-                console.error('Error response:', error.response);
-            }
-            return Promise.reject(error.response);
-        } else if (error.request) {
-            // Handle network error (no response received)
-            console.error('Error request:', error.request);
-            return Promise.reject(error.request);
-        } else {
-            // Handle any other errors
-            console.error('Error message:', error.message);
-            return Promise.reject(error.message);
+        if (error.response?.status === 401) {
+            // Remove token and redirect to login on session expiration
+            localStorage.removeItem('token');
+            window.location.href = '/login'; 
         }
+        return Promise.reject(error);
     }
 );
 

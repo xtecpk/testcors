@@ -148,7 +148,7 @@ const Common: React.FC<CommonProps> = ({ show, onHide }) => {
                   <div className="col-6">
                     <label className="inter fw-bold pt-2 pb-2">Date:</label>
                     <input
-                      type="text"
+                      type="date"
                       className="form-control input"
                       placeholder="Enter Date"
                       value={date}

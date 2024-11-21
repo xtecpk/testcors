@@ -62,30 +62,36 @@ function DamageAndDefects() {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
+  
       try {
         const response = await axiosInstance.get<{ message: string; allTasks: Task[] }>("task/getalltasks");
-        const tasks = response.data.allTasks.map((task, index) => ({
-          no: index + 1,
-          taskTitle: task.title || "N/A",
-          description: task.description || "N/A",
-          department: "N/A", // Update if you have this info in the backend
-          location: "N/A", // Update if you have this info in the backend
-          assigned: `User ${task.primaryassigneeId || "N/A"}`,
-          status: task.status || "N/A",
-          equipment: "N/A", // Update if you have this info in the backend
-          tools: "N/A", // Update if you have this info in the backend
-        }));
-        setRowData(tasks);
+  
+        if (response.data && response.data.allTasks) {
+          const tasks = response.data.allTasks.map((task, index) => ({
+            no: index + 1,
+            taskTitle: task.title || "N/A",
+            description: task.description || "N/A",
+            department: "N/A", // Update if you have this info in the backend
+            location: "N/A", // Update if you have this info in the backend
+            assigned: `User ${task.primaryassigneeId || "N/A"}`,
+            status: task.status || "N/A",
+            equipment: "N/A", // Update if you have this info in the backend
+            tools: "N/A", // Update if you have this info in the backend
+          }));
+          setRowData(tasks);
+        } else {
+          setError("No tasks found.");
+        }
       } catch (error) {
-        setError("Error fetching data. Please try again.");
         console.error("Error fetching data:", error);
+        setError("Error fetching data. Please try again.");
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
+  
 
   const handleModalClose = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {

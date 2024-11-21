@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import axiosInstance from '../../../axiosInstance';  // Import axios instance
 import { Link, useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';  // Import AxiosError type from axios package
+import axiosInstance from '../../../axiosInstance'; // Import axios instance
+import { AxiosError } from 'axios';
 
 const Login: React.FC = () => {
   const [employeeid, setEmployeeId] = useState('');
@@ -9,7 +9,7 @@ const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  // Check if the user is already logged in on page load
+  // Redirect user to the dashboard if already logged in
   useEffect(() => {
     const authToken = localStorage.getItem('token');
     if (authToken) {
@@ -20,53 +20,43 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-
-    // Validate inputs
+  
     if (!employeeid.trim() || !password.trim()) {
-      setErrorMessage('Please fill in both Employee ID and Password.');
+      setErrorMessage('Please provide both Employee ID and Password.');
       return;
     }
-
-    console.log('Employee ID:', employeeid);  // Log employee id
-    console.log('Password:', password);       // Log password
-
+  
+    console.log('Attempting login with:', { employeeid, password });
+  
     try {
-      // Send login request to the server
       const response = await axiosInstance.post('auth/login', {
         employeeid,
         password,
       });
-
-      console.log('Response status:', response.status);
-      console.log('Response body:', response.data);
-
-      // Check if the response is successful
-      if (response.status === 200 && response.data && response.data.token) {
-        // Save token in localStorage and redirect
+  
+      console.log('Server Response:', response);
+  
+      if (response.status === 200 && response.data?.token) {
         localStorage.setItem('token', response.data.token);
-        console.log('Token saved:', localStorage.getItem('token'));
-        navigate('/NIEUDASH'); // Redirect to dashboard
+        console.log('Login successful. Token:', response.data.token);
+        navigate('/NIEUDASH');
       } else {
-        // Show an error message if login fails
-        setErrorMessage(response.data.message || 'Login failed. Please try again.');
+        setErrorMessage(response.data?.message || 'Login failed.');
       }
     } catch (error: unknown) {
-      // Enhanced error handling with proper error type
-      console.error('Error during login:', error);
-
-      // Check if the error is an AxiosError
       if (error instanceof AxiosError) {
-        // Handle Axios-specific errors (e.g., 4xx or 5xx responses)
+        console.error('AxiosError:', error.response);
         setErrorMessage(error.response?.data?.message || 'Login failed. Please try again.');
       } else if (error instanceof Error) {
-        // Handle general errors (e.g., network issues)
-        setErrorMessage(error.message || 'Login failed. Please try again.');
+        console.error('Error:', error);
+        setErrorMessage(error.message);
       } else {
-        // Catch any other unexpected errors
+        console.error('Unexpected error:', error);
         setErrorMessage('An unexpected error occurred.');
       }
     }
   };
+  
 
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-[#f1f1f1]">
@@ -99,7 +89,6 @@ const Login: React.FC = () => {
                 value={employeeid}
                 onChange={(e) => setEmployeeId(e.target.value)}
                 required
-                aria-label="Employee ID"
               />
             </div>
             <div className="mb-3">
@@ -114,11 +103,9 @@ const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                aria-label="Password"
               />
             </div>
 
-            {/* Display error message if any */}
             {errorMessage && (
               <div className="alert alert-danger text-center" role="alert">
                 {errorMessage}
@@ -133,7 +120,7 @@ const Login: React.FC = () => {
             <p>
               Don't have an account? <Link to="/signup">Sign Up</Link>
             </p>
-            <p className='mt-10'>version 1.0.4</p>
+            <p className="mt-10">Version 1.0.5</p>
           </div>
         </div>
       </div>
