@@ -120,7 +120,7 @@ const Login: React.FC = () => {
             <p>
               Don't have an account? <Link to="/signup">Sign Up</Link>
             </p>
-            <p className="mt-10">Version 1.0.5</p>
+            <p className="mt-10">Version 1.0.6</p>
           </div>
         </div>
       </div>
