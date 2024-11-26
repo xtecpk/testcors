@@ -4,6 +4,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import BoxInventoryModal from "./modal/BoxInventoryModal";
 
 // Define the structure of data expected from the API
 interface CategoryData {
@@ -24,6 +25,9 @@ const BoxInventoryLabel = () => {
     { field: "label", flex: 1, headerName: "Label", filter: "agTextColumnFilter", floatingFilter: true },
     { field: "type", flex: 1, headerName: "Type", filter: "agTextColumnFilter", floatingFilter: true },
   ];
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+
+  
 
   useEffect(() => {
     // Fetch data from the API
@@ -49,6 +53,13 @@ const BoxInventoryLabel = () => {
     <>
     
       {/* Table for Labels */}
+      <div className="d-flex justify-content-end  m-3 align-items-center">
+        <button className="btn blue d-flex align-items-center text-white rounded-xl w-36 text-lg font-semibold inter p-3  gap-4 align-items-lg-center"
+        onClick={() => setShowDetails(true)}>
+          Add
+          <img src="./add.png" alt="add.png" />
+        </button>
+      </div>
       <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
         {loading ? (
           <div>Loading...</div>
@@ -64,6 +75,7 @@ const BoxInventoryLabel = () => {
           />
         )}
       </div>
+      <BoxInventoryModal show={showDetails} onHide={() => setShowDetails(false)} />
     </>
   );
 };

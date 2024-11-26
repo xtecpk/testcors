@@ -1,32 +1,32 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface categorieModalProps {
+interface LabelModalProps {
   show: boolean;
   onHide: (e: React.MouseEvent) => void;
 }
 
-const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
+const LabelModal: React.FC<LabelModalProps> = ({ show, onHide }) => {
   const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [store, setStore] = useState<string>("");
+  const [labelType, setLabelType] = useState<string>("");
+  const [type, setType] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!name || !description || !store) {
+    if (!name || !labelType || !type) {
       setError("All fields are required");
       return;
     }
 
     setError(null);
 
-    const data = { name, description, store };
+    const data = { name, labelType, type };
 
     try {
       await axios.post("YOUR_API_ENDPOINT", data);
       setName("");
-      setDescription("");
-      setStore("");
+      setLabelType("");
+      setType("");
     } catch (error) {
       console.error("Failed to submit data:", error);
       setError("Failed to submit data. Please try again.");
@@ -63,24 +63,24 @@ const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
                   placeholder="Enter Name"
                 />
                 <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
-                  Description:
+                  Label Type:
                 </label>
                 <input
                   type="text"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={labelType}
+                  onChange={(e) => setLabelType(e.target.value)}
                   className="form-control input"
-                  placeholder="Enter Description"
+                  placeholder="Enter Label Type"
                 />
                 <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
-                  Store:
+                  Type:
                 </label>
                 <input
                   type="text"
-                  value={store}
-                  onChange={(e) => setStore(e.target.value)}
-                  className="form-control input "
-                  placeholder="Enter Store"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="form-control input"
+                  placeholder="Enter Type"
                 />
               </div>
               {error && <div className="text-danger text-center mt-2">{error}</div>}
@@ -89,7 +89,7 @@ const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
                   className="blue w-52 p-2 px-40 rounded-lg text-white mb-3 font-semibold inter"
                   onClick={handleSubmit}
                 >
-                  Add 
+                  Add
                 </button>
               </div>
             </div>
@@ -100,4 +100,4 @@ const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
   );
 };
 
-export default CategorieModal;
+export default LabelModal;

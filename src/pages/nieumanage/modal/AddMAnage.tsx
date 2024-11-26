@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { AxiosError } from "axios";
+import { ColorRing } from "react-loader-spinner";
 
 interface AddManageProps {
   show: boolean;
@@ -16,6 +17,7 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
   const [phone, setPhone] = useState<string>("");
   const [avatar, setAvatar] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -23,58 +25,87 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
     }
   };
 
-// Submit form data to the API
-const handleSubmit = async () => {
-  const formData = new FormData(); 
-  formData.append("name", name);
-  formData.append("password", password);
-  formData.append("role", role);
-  formData.append("employeeid", employeeId);
-  formData.append("personalemail", personalEmail);
-  formData.append("phone", phone);
-  if (avatar) {
-    formData.append("avatar", avatar); // Append avatar if it exists
-  }
-
-  try {
-    // API call using axiosInstance
-    const { data } = await axiosInstance.post("auth/register", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // Set Content-Type explicitly
-      },
-    });
-
-    // Use the response data
-    console.log("User registered successfully:", data);
-
-    // Show success alert
-    alert("User registered successfully!");
-
-    // Clear form fields
-    setName("");
-    setPassword("");
-    setRole("");
-    setEmployeeId("");
-    setPersonalEmail("");
-    setPhone("");
-    setAvatar(null);
-    setError(null);
-  } catch (error) {
-    // Handle errors globally and locally
-    if (error instanceof AxiosError) {
-      if (error.response) {
-        console.error("API Error:", error.response.data);
-        setError(error.response.data?.message || "An error occurred.");
-      } else {
-        console.error("Network Error:", error.message);
-        setError("Network error, please check your connection.");
-      }
-    } else {
-      console.error("Unexpected Error:", error);
-      setError("An unexpected error occurred. Please try again.");
+  const handleSubmit = async () => {
+    if (!avatar) {
+      setError("Please upload an avatar before submitting.");
+      return;
     }
-  }
-};
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Step 1: Register the user
+      const userResponse = await axiosInstance.post("auth/register", {
+        name,
+        password,
+        role,
+        employeeid: employeeId,
+        personalemail: personalEmail,
+        phone,
+      });
+
+      const userId = userResponse.data?.profile?.id;
+      console.log("User registered successfully, ID:", userId);
+
+      // Step 2: Upload the avatar
+      const avatarFormData = new FormData();
+      avatarFormData.append("file", avatar);
+      console.log("FormData being sent:", avatarFormData);
+
+      const avatarResponse = await axiosInstance.post("uploads/upload/", avatarFormData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Avatar response:", avatarResponse);
+
+      const avatarPath = avatarResponse.data?.file?.path;
+      console.log("Avatar uploaded successfully:", avatarPath);
+
+      // Step 3: Link avatar to the user
+      if (avatarPath && userId) {
+        await axiosInstance.put(`auth/users/${userId}`, {
+          avatar: avatarPath,
+        });
+
+        console.log("User and avatar linked successfully.");
+        alert("User created successfully!");
+
+        // Clear form fields
+        setName("");
+        setPassword("");
+        setRole("");
+        setEmployeeId("");
+        setPersonalEmail("");
+        setPhone("");
+        setAvatar(null);
+        setError(null);
+      } else {
+        setError("Avatar path or user ID is missing.");
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          console.error("API Error:", error.response.data);
+          setError(
+            typeof error.response.data?.message === "string"
+              ? error.response.data.message
+              : "An error occurred. Please try again."
+          );
+        } else {
+          console.error("Network Error:", error.message);
+          setError("Network error, please check your connection.");
+        }
+      } else {
+        console.error("Unexpected Error:", error);
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -92,98 +123,115 @@ const handleSubmit = async () => {
           >
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
               {error && <div className="alert alert-danger text-center">{error}</div>}
-              <div className="p-4">
-                {/* Input fields */}
-                <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Name:</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="form-control input"
-                      placeholder="Enter name"
+              <form method="post" className="p-4">
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <ColorRing
+                      visible={true}
+                      height="80"
+                      width="80"
+                      ariaLabel="color-ring-loading"
+                      wrapperStyle={{}}
+                      wrapperClass="color-ring-wrapper"
+                      colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
                     />
                   </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Password:</label>
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="form-control input"
-                      placeholder="Enter password"
-                    />
-                  </div>
-                </div>
+                ) : (
+                  <>
+                    {/* Input fields */}
+                    <div className="row">
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Name:</label>
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="form-control input"
+                          placeholder="Enter name"
+                        />
+                      </div>
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Password:</label>
+                        <input
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="form-control input"
+                          placeholder="Enter password"
+                        />
+                      </div>
+                    </div>
 
-                <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Role:</label>
-                    <input
-                      type="text"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                      className="form-control input"
-                      placeholder="Enter role"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Employee ID:</label>
-                    <input
-                      type="text"
-                      value={employeeId}
-                      onChange={(e) => setEmployeeId(e.target.value)}
-                      className="form-control input"
-                      placeholder="Enter employee ID"
-                    />
-                  </div>
-                </div>
+                    <div className="row">
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Role:</label>
+                        <input
+                          type="text"
+                          value={role}
+                          onChange={(e) => setRole(e.target.value)}
+                          className="form-control input"
+                          placeholder="Enter role"
+                        />
+                      </div>
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Employee ID:</label>
+                        <input
+                          type="text"
+                          value={employeeId}
+                          onChange={(e) => setEmployeeId(e.target.value)}
+                          className="form-control input"
+                          placeholder="Enter employee ID"
+                        />
+                      </div>
+                    </div>
 
-                <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Personal Email:</label>
-                    <input
-                      type="email"
-                      value={personalEmail}
-                      onChange={(e) => setPersonalEmail(e.target.value)}
-                      className="form-control input"
-                      placeholder="Enter personal email"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Phone:</label>
-                    <input
-                      type="text"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="form-control input"
-                      placeholder="Enter phone"
-                    />
-                  </div>
-                </div>
+                    <div className="row">
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Personal Email:</label>
+                        <input
+                          type="email"
+                          value={personalEmail}
+                          onChange={(e) => setPersonalEmail(e.target.value)}
+                          className="form-control input"
+                          placeholder="Enter personal email"
+                        />
+                      </div>
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Phone:</label>
+                        <input
+                          type="text"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="form-control input"
+                          placeholder="Enter phone"
+                        />
+                      </div>
+                    </div>
 
-                <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Avatar:</label>
-                    <input
-                      type="file"
-                      onChange={handleAvatarChange}
-                      className="form-control input"
-                    />
-                  </div>
-                </div>
-              </div>
+                    <div className="row">
+                      <div className="col">
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">Avatar:</label>
+                        <input
+                          type="file"
+                          onChange={handleAvatarChange}
+                          className="form-control input"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </form>
 
-              {/* Submit Button */}
-              <div className="text-center mt-1">
-                <button
-                  className="green w-48 p-2 px-40 rounded-lg text-white font-semibold inter my-3"
-                  onClick={handleSubmit}
-                >
-                  Add
-                </button>
-              </div>
+              {!loading && (
+                <div className="text-center mt-1">
+                  <button
+                    className="green w-48 p-2 px-40 rounded-lg text-white font-semibold inter my-3"
+                    onClick={handleSubmit}
+                  >
+                    Add
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

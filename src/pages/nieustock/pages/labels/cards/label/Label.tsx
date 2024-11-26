@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import LabelModal from "./modal/LabelModal";
 
 // Define the interface for category data
 interface CategoryData {
@@ -23,6 +24,8 @@ const Label = () => {
   ]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,7 +44,15 @@ const Label = () => {
   return (
     <>
       {/* Caeds for Labels */}
+      <div className="d-flex justify-content-end  m-3 align-items-center">
+        <button className="btn blue d-flex align-items-center text-white rounded-xl w-36 text-lg font-semibold inter p-3  gap-4 align-items-lg-center"
+        onClick={() => setShowDetails(true)}>
+          Add
+          <img src="./add.png" alt="add.png" />
+        </button>
+      </div>
       <div className="container-fluid">
+        
       <div className="row">
         <div className="col-12">
       <div className="ag-theme-quartz" style={{ height: "500px", width: "100%" }}>
@@ -60,6 +71,7 @@ const Label = () => {
       </div>
       </div>
       </div>
+      <LabelModal show={showDetails} onHide={() => setShowDetails(false)} />
     </>
   );
 }

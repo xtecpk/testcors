@@ -4,6 +4,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef, ICellRendererParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import NewPurchaseRequest from "./modals/NewpurchaseRequest";
 
 interface CategoryData {
   no: number;
@@ -18,6 +19,7 @@ function Neiuprocure() {
   const [rowData, setRowData] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   const [totalRequests, setTotalRequests] = useState<number>(0);
   const [rejectedRequests, setRejectedRequests] = useState<number>(0);
@@ -97,6 +99,12 @@ function Neiuprocure() {
     setSelectedRowData(data);
   };
 
+  const handleModalClose = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setShowDetails(false);
+    }
+  };
+
   return (
     <>
       <div className="container-fluid min-vh-100">
@@ -136,7 +144,7 @@ function Neiuprocure() {
           <div className="d-flex justify-content-end m-3 align-items-center">
             <button
               className="btn blue d-flex align-items-center rounded-xl w-54 text-white text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
-              
+              onClick={() => setShowDetails(true)} 
             >
               Add & Manage
               <img src="./add.png" alt="add.png" />
@@ -171,6 +179,7 @@ function Neiuprocure() {
           )}
         </div>
       </div>
+      <NewPurchaseRequest show={showDetails} onHide={handleModalClose} />
     </>
   );
 }

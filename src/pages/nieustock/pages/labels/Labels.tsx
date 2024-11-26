@@ -53,8 +53,8 @@ function LabCards() {
     <>
 
         {/* Summary Cards Section */}
-        <div className="container-fluid">
-          <div className="row gap-8 px-5">
+        <div className="container-fluid ">
+          <div className="row gap-8 px-5 ">
             <div className="col flex flex-col w-10/12 h-32 m-2 p-6  rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
                 Total Labels <br />
@@ -78,15 +78,10 @@ function LabCards() {
           </div>
         </div>
 
-        <div className="d-flex justify-content-end  m-3 align-items-center">
-        <button className="btn blue d-flex align-items-center text-white rounded-xl w-32 text-lg font-semibold inter p-3  gap-4 align-items-lg-center">
-          Add
-          <img src="./add.png" alt="add.png" />
-        </button>
-      </div>
+        
 
         {/* Sidebar and Main Content Section */}
-        <div className="container-fluid">
+        <div className="container-fluid mt-12">
         <div className="d-flex">
           {/* Sidebar for card navigation */}
           <div className="sidebar p-3 " style={{ width: "250px" }}>
@@ -97,7 +92,7 @@ function LabCards() {
                 onClick={() => handleCardClick("Label")}
                 style={{ cursor: "pointer" }}
               >
-                Label
+                All
               </div>
               <div
                 className={`col flex flex-col w-54 h-20 mb-3 p-4 rounded-lg cursor-pointer transition-all duration-300 

@@ -4,6 +4,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import BottLevelModal from "./modal/BottLevelModal";
 
 // Define the structure of data expected from the API
 interface CategoryData {
@@ -17,6 +18,8 @@ const BottLevel = () => {
   const [rowData, setRowData] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+  
 
   const columnDefs: ColDef<CategoryData>[] = [
     { field: "id", flex: 1, headerName: "ID", filter: "agTextColumnFilter", floatingFilter: true },
@@ -49,6 +52,13 @@ const BottLevel = () => {
     <>
     
       {/* Table for Labels */}
+      <div className="d-flex justify-content-end  m-3 align-items-center">
+        <button className="btn blue d-flex align-items-center text-white rounded-xl w-36 text-lg font-semibold inter p-3  gap-4 align-items-lg-center"
+        onClick={() => setShowDetails(true)}>
+          Add
+          <img src="./add.png" alt="add.png" />
+        </button>
+      </div>
       <div className="ag-theme-quartz rounded-sm" style={{ height: "500px", width: "100%" }}>
         {loading ? (
           <div>Loading...</div>
@@ -64,6 +74,7 @@ const BottLevel = () => {
           />
         )}
       </div>
+      <BottLevelModal show={showDetails} onHide={() => setShowDetails(false)} />
     </>
   );
 };

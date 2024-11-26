@@ -1,32 +1,32 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface categorieModalProps {
+interface BottLevelModalProps {
   show: boolean;
   onHide: (e: React.MouseEvent) => void;
 }
 
-const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [store, setStore] = useState<string>("");
+const BottLevelModal: React.FC<BottLevelModalProps> = ({ show, onHide }) => {
+  const [userName, setUserName] = useState<string>("");
+  const [role, setRole] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!name || !description || !store) {
+    if (!userName || !role || !email) {
       setError("All fields are required");
       return;
     }
 
     setError(null);
 
-    const data = { name, description, store };
+    const data = { userName, role, email };
 
     try {
       await axios.post("YOUR_API_ENDPOINT", data);
-      setName("");
-      setDescription("");
-      setStore("");
+      setUserName("");
+      setRole("");
+      setEmail("");
     } catch (error) {
       console.error("Failed to submit data:", error);
       setError("Failed to submit data. Please try again.");
@@ -53,34 +53,34 @@ const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
               {error && <div className="alert alert-danger text-center">{error}</div>}
               <div className="p-4 text-start">
                 <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
-                  Name:
+                  User Name:
                 </label>
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
                   className="form-control input"
-                  placeholder="Enter Name"
+                  placeholder="Enter user name"
                 />
                 <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
-                  Description:
+                  Role:
                 </label>
                 <input
                   type="text"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
                   className="form-control input"
-                  placeholder="Enter Description"
+                  placeholder="Enter role"
                 />
                 <label className="inter text-[#000] pt-2 pb-2 text-base fw-bold">
-                  Store:
+                  Email:
                 </label>
                 <input
-                  type="text"
-                  value={store}
-                  onChange={(e) => setStore(e.target.value)}
-                  className="form-control input "
-                  placeholder="Enter Store"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="form-control input"
+                  placeholder="Enter email"
                 />
               </div>
               {error && <div className="text-danger text-center mt-2">{error}</div>}
@@ -89,7 +89,7 @@ const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
                   className="blue w-52 p-2 px-40 rounded-lg text-white mb-3 font-semibold inter"
                   onClick={handleSubmit}
                 >
-                  Add 
+                  Add
                 </button>
               </div>
             </div>
@@ -100,4 +100,4 @@ const CategorieModal: React.FC<categorieModalProps> = ({ show, onHide }) => {
   );
 };
 
-export default CategorieModal;
+export default BottLevelModal;

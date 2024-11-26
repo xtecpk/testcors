@@ -71,12 +71,12 @@ function DamageAndDefects() {
             no: index + 1,
             taskTitle: task.title || "N/A",
             description: task.description || "N/A",
-            department: "N/A", // Update if you have this info in the backend
-            location: "N/A", // Update if you have this info in the backend
+            department: "N/A", 
+            location: "N/A", 
             assigned: `User ${task.primaryassigneeId || "N/A"}`,
             status: task.status || "N/A",
-            equipment: "N/A", // Update if you have this info in the backend
-            tools: "N/A", // Update if you have this info in the backend
+            equipment: "N/A", 
+            tools: "N/A", 
           }));
           setRowData(tasks);
         } else {
