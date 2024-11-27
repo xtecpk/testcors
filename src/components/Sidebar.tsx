@@ -30,7 +30,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps) {
     { to: "/NIEUMANAGE", label: "NIEUMANAGE", icon: "./Admin Settings Male.png" },
     { to: "/NIEUADMIN", label: "NIEUADMIN", icon: "./Secure.png" },
     { to: "/NIEUCOMS", label: "NIEUCOMS", icon: "./Communication.png" },
-    { to: "/NIEUGAURD", label: "NIEUGAURD", icon: "./Settings.png" },
+    { to: "/NIEUGUARD",label: "NIEUGUARD", icon: "./Settings.png" },
     { to: "/NIEUWORKFORCE", label: "NIEUWORKFORCE", icon: "./Flight Crew.png" },
     { to: "/NIEUZONE", label: "NIEUZONE", icon: "./Location.png" },
     { to: "/NIEUZONE_BASIC", label: "NIEUZONE BASIC", icon: "./Map Pin.png" },

@@ -13,14 +13,13 @@ import NieuZoneIntermediate from '../pages/nieuzone-intermediate/NieuZoneInterme
 import NieuZoneBasic from '../pages/nieuzone-basic/NieuZoneBasic';
 import NeiuZone from '../pages/nieuzone/NeiuZone';
 import NieuWorkForce from '../pages/nieuworkforce/NieuWorkForce';
-import NieuGuard from '../pages/nieuguard/NieuGuard';
 import NieuComs from '../pages/nieucoms/NieuComs';
 import NieuAdmin from '../pages/nieuadmin/NieuAdmin';
 import NieuManage from '../pages/nieumanage/NieuManage';
 import NieuSet from '../pages/nieuset/NieuSet';
 import NieuMatrix from '../pages/nieumatrix/NieuMatrix';
 import NieuStock from '../pages/nieustock/NieuStock'; // Import the ProtectedRoute
-
+import NieuGuard1 from '../pages/nieuguard/NieuGuard1';
 const Dashboard: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate(); // For navigation after successful login
@@ -64,7 +63,7 @@ const Dashboard: React.FC = () => {
             <Route path="/NIEUMANAGE" element={<NieuManage />} />
             <Route path="/NIEUADMIN" element={<NieuAdmin />} />
             <Route path="/NIEUCOMS" element={<NieuComs />} />
-            <Route path="/NIEUGUARD" element={<NieuGuard />} />
+            <Route path='/NIEUGUARD' element={< NieuGuard1 />} />
             <Route path="/NIEUWORKFORCE" element={<NieuWorkForce />} />
             <Route path="/NIEUZONE" element={<NeiuZone />} />
             <Route path="/NIEUZONE_BASIC" element={<NieuZoneBasic />} />

@@ -4,9 +4,9 @@ import { ColDef, CellEditingStoppedEvent } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import axiosInstance from "../../axiosInstance"; // Import your axios instance
-import NieusetModal from "./modal/NieusetModal";
+import NieuGuardModal from "./NieuGuardModal";
 
-interface CategoryData {
+interface NieuGuardData {
   no: number;
   userName: string;
   role: string;
@@ -16,8 +16,8 @@ interface CategoryData {
   lastLoginIp: string;
 }
 
-function NieuSet() {
-  const [rowData, setRowData] = useState<CategoryData[]>([]);
+function NieuGuard1() {
+  const [rowData, setRowData] = useState<NieuGuardData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -28,12 +28,12 @@ function NieuSet() {
 
   const columnDefs: ColDef[] = [
     { field: "no", flex: 1, headerName: "No.", editable: false, filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "vesselId", flex: 1, headerName: "Vessel ID", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "registoryNo", flex: 1, headerName: "Registory No", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "length", flex: 1, headerName: "Length(ft)", editable: false, filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "width", flex: 1, headerName: "Width(ft)", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "homePort", flex: 1, headerName: "Home Port", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
-    { field: "yearBuilt", flex: 1, headerName: "Year Built", editable: false, filter: "agTextColumnFilter", floatingFilter: true },
+    { field: "deviceMAcAddress", flex: 1, headerName: "Device MAC Address", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
+    { field: "device", flex: 1, headerName: "Device", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
+    { field: "username", flex: 1, headerName: "User Name", editable: false, filter: "agTextColumnFilter", floatingFilter: true },
+    { field: "StartingHours", flex: 1, headerName: "Starting Hours", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
+    { field: "endingHours", flex: 1, headerName: "Ending Hours", editable: true, filter: "agTextColumnFilter", floatingFilter: true },
+    { field: "location", flex: 1, headerName: "Location", editable: false, filter: "agTextColumnFilter", floatingFilter: true },
   ];
 
   useEffect(() => {
@@ -69,7 +69,7 @@ function NieuSet() {
   }, []);
 
   const handleCellEdit = async (params: CellEditingStoppedEvent) => {
-    const updatedData = params.data as CategoryData;
+    const updatedData = params.data as NieuGuardData;
     try {
       await axiosInstance.put(`YOUR_API_ENDPOINT_FOR_UPDATE/${updatedData.no}`, updatedData);
       console.log("Data updated successfully:", updatedData);
@@ -81,34 +81,34 @@ function NieuSet() {
   return (
     <>
       <div className="container-fluid min-vh-100">
-        <h3 className="mb-4 text-black ubuntu fw-bold text-3xl">NIEUSET</h3>
+        <h3 className="mb-4 text-black ubuntu fw-bold text-3xl">NIEUGUARD</h3>
         <div className="container-fluid">
           <div className="row">
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
-                Vessel Name <br />
+                Devices Connected <br />
                 <strong className="mt-1">{totalUsers}</strong>
               </div>
             </div>
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
-                Modal <br />
+                Restricted Devices <br />
                 <strong className="mt-1">{activeUsers}</strong>
               </div>
             </div>
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
-                Make <br />
+                Devices Allowed <br />
                 <strong className="mt-1">{inactiveUsers}</strong>
               </div>
             </div>
             <div className="col">
               <div className="flex flex-col w-12/12 h-32 m-2 p-6 rounded-lg cursor-pointer transition-all duration-300 
                 shadow-lg hover:shadow-xl transform hover:scale-105 bg-white text-start inter text-lg font-semibold">
-                In Service Since <br />
+                Available Connections <br />
                 <strong className="mt-1">{superAdminCount}</strong>
               </div>
             </div>
@@ -118,7 +118,7 @@ function NieuSet() {
               className="btn blue d-flex align-items-center rounded-xl w-54 text-white text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
               onClick={() => setShowDetails(true)}
             >
-              Add NIEUSET
+              Add NIEUGUARD
               <img src="./add.png" alt="add.png" />
             </button>
           </div>
@@ -138,9 +138,9 @@ function NieuSet() {
           </div>
         </div>
       </div>
-      <NieusetModal show={showDetails} onHide={() => setShowDetails(false)} />
+      <NieuGuardModal show={showDetails} onHide={() => setShowDetails(false)} />
     </>
   );
 }
 
-export default NieuSet;
+export default NieuGuard1
