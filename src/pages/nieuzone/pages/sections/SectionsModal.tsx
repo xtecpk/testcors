@@ -1,36 +1,36 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface NieusetModalProps {
+interface SectionsModalProps {
   show: boolean;
   onHide: (e: React.MouseEvent) => void;
 }
 
-const SectionsModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
-  const [vesselID, setVesselID] = useState<string>("");
-  const [registoryNo, setRegistoryNo] = useState<string>("");
-  const [length, setLength] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
-  const [homePort, setHomePort] = useState<string>("");
+const SectionsModal: React.FC<SectionsModalProps> = ({ show, onHide }) => {
+  const [deck, setDeck] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [incharge, setIncharge] = useState<string>("");
+  const [crew, setCrew] = useState<string>("");
+  const [agLayout, setAgLayout] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!vesselID || !registoryNo || !length || !width || !homePort ) {
+    if (!deck || !name || !incharge || !crew || !agLayout ) {
       setError("All fields are required");
       return;
     }
 
     setError(null);
 
-    const data = { vesselID, registoryNo, length, width, homePort};
+    const data = { deck, name, incharge, crew, agLayout};
 
     try {
       await axios.post("YOUR_API_ENDPOINT", data);
-      setVesselID("");
-      setRegistoryNo("");
-      setLength("");
-      setWidth("");
-      setHomePort("");
+      setDeck("");
+      setName("");
+      setIncharge("");
+      setCrew("");
+      setAgLayout("");
     } catch (error) {
       console.error("Failed to submit data:", error);
       setError("Failed to submit data. Please try again.");
@@ -62,8 +62,8 @@ const SectionsModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={vesselID}
-                  onChange={(e) => setVesselID(e.target.value)}
+                  value={deck}
+                  onChange={(e) => setDeck(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Deck"
                 /></div>
@@ -73,8 +73,8 @@ const SectionsModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={registoryNo}
-                  onChange={(e) => setRegistoryNo(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Name"
                 /></div></div>
@@ -84,8 +84,8 @@ const SectionsModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={length}
-                  onChange={(e) => setLength(e.target.value)}
+                  value={incharge}
+                  onChange={(e) => setIncharge(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Incharge"
                 /></div>
@@ -95,8 +95,8 @@ const SectionsModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={width}
-                  onChange={(e) => setWidth(e.target.value)}
+                  value={crew}
+                  onChange={(e) => setCrew(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Crew"
                 /></div></div>
@@ -106,8 +106,8 @@ const SectionsModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="file"
-                  value={homePort}
-                  onChange={(e) => setHomePort(e.target.value)}
+                  value={agLayout}
+                  onChange={(e) => setAgLayout(e.target.value)}
                   className="form-control input"
                   placeholder="Enter AG Layout"
                 /></div>

@@ -6,18 +6,19 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import axiosInstance from "../../../../axiosInstance"; // Import your axios instance
 import DecksModal from "./modal/DecksModal";
 
-interface NieuGuardData {
+interface DecksData {
   no: number;
-  userName: string;
-  role: string;
-  lastActive: string;
-  email: string;
-  status: string;
-  lastLoginIp: string;
+  name: string;
+  incharge: string;
+  crew: string;
+  guests: string;
+  onBoardCapacity: string;
+  weightCapacity: string;
+  gaLayout: string;
 }
 
 function Decks() {
-  const [rowData, setRowData] = useState<NieuGuardData[]>([]);
+  const [rowData, setRowData] = useState<DecksData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -69,7 +70,7 @@ function Decks() {
   }, []);
 
   const handleCellEdit = async (params: CellEditingStoppedEvent) => {
-    const updatedData = params.data as NieuGuardData;
+    const updatedData = params.data as DecksData;
     try {
       await axiosInstance.put(`YOUR_API_ENDPOINT_FOR_UPDATE/${updatedData.no}`, updatedData);
       console.log("Data updated successfully:", updatedData);

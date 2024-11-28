@@ -6,18 +6,17 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import axiosInstance from "../../../../axiosInstance"; // Import your axios instance
 import SectionsModal from "./SectionsModal";
 
-interface NieuGuardData {
+interface SectionsData {
   no: number;
-  userName: string;
-  role: string;
-  lastActive: string;
-  email: string;
-  status: string;
-  lastLoginIp: string;
+  deck: string;
+  name: string;
+  incharge: string;
+  crew: string;
+  galayout: string;
 }
 
 function Sections() {
-  const [rowData, setRowData] = useState<NieuGuardData[]>([]);
+  const [rowData, setRowData] = useState<SectionsData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -67,7 +66,7 @@ function Sections() {
   }, []);
 
   const handleCellEdit = async (params: CellEditingStoppedEvent) => {
-    const updatedData = params.data as NieuGuardData;
+    const updatedData = params.data as SectionsData;
     try {
       await axiosInstance.put(`YOUR_API_ENDPOINT_FOR_UPDATE/${updatedData.no}`, updatedData);
       console.log("Data updated successfully:", updatedData);

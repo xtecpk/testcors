@@ -165,7 +165,7 @@ function Products() {
 
       <div className="d-flex justify-content-end m-3 align-items-center ">
         <button
-          className="btn blue d-flex align-items-center text-white rounded-xl w-52 text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
+          className="btn blue d-flex align-items-center text-white rounded-xl w-56 text-lg font-semibold inter p-3 gap-4 align-items-lg-center"
           onClick={() => setShowDetails(true)}
         >
           Add Products

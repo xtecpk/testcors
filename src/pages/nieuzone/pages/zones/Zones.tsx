@@ -6,18 +6,18 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import axiosInstance from "../../../../axiosInstance"; // Import your axios instance
 import ZonesModal from "./modal/ZonesModal";
 
-interface NieuGuardData {
+interface ZonesData {
   no: number;
-  userName: string;
-  role: string;
-  lastActive: string;
-  email: string;
-  status: string;
-  lastLoginIp: string;
+  zoneId: string;
+  zoneName: string;
+  department: string;
+  items: string;
+  actions: string;
 }
 
+
 function Zones() {
-  const [rowData, setRowData] = useState<NieuGuardData[]>([]);
+  const [rowData, setRowData] = useState<ZonesData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -67,7 +67,7 @@ function Zones() {
   }, []);
 
   const handleCellEdit = async (params: CellEditingStoppedEvent) => {
-    const updatedData = params.data as NieuGuardData;
+    const updatedData = params.data as ZonesData;
     try {
       await axiosInstance.put(`YOUR_API_ENDPOINT_FOR_UPDATE/${updatedData.no}`, updatedData);
       console.log("Data updated successfully:", updatedData);

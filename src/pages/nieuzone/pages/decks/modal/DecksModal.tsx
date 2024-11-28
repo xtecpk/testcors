@@ -1,38 +1,38 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface NieusetModalProps {
+interface DecksModalProps {
   show: boolean;
   onHide: (e: React.MouseEvent) => void;
 }
 
-const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
-  const [vesselID, setVesselID] = useState<string>("");
-  const [registoryNo, setRegistoryNo] = useState<string>("");
-  const [length, setLength] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
-  const [homePort, setHomePort] = useState<string>("");
-  const [yearBuilt , setYearBuilt] = useState<string>("");
+const DecksModal: React.FC<DecksModalProps> = ({ show, onHide }) => {
+  const [name, setName] = useState<string>("");
+  const [incharge, setIncharge] = useState<string>("");
+  const [crew, setCrew] = useState<string>("");
+  const [guests, setGuests] = useState<string>("");
+  const [weightCapacity, setWeightCapacity] = useState<string>("");
+  const [gaLayout , setGaLayout] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!vesselID || !registoryNo || !length || !width || !homePort || !yearBuilt) {
+    if (!name || !incharge || !crew || !guests || !weightCapacity || !gaLayout) {
       setError("All fields are required");
       return;
     }
 
     setError(null);
 
-    const data = { vesselID, registoryNo, length, width, homePort, yearBuilt };
+    const data = { name, incharge, crew, guests, weightCapacity, gaLayout };
 
     try {
       await axios.post("YOUR_API_ENDPOINT", data);
-      setVesselID("");
-      setRegistoryNo("");
-      setLength("");
-      setWidth("");
-      setHomePort("");
-      setYearBuilt("");
+      setName("");
+      setIncharge("");
+      setCrew("");
+      setGuests("");
+      setWeightCapacity("");
+      setGaLayout("");
     } catch (error) {
       console.error("Failed to submit data:", error);
       setError("Failed to submit data. Please try again.");
@@ -64,8 +64,8 @@ const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={vesselID}
-                  onChange={(e) => setVesselID(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Name"
                 /></div>
@@ -75,8 +75,8 @@ const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={registoryNo}
-                  onChange={(e) => setRegistoryNo(e.target.value)}
+                  value={incharge}
+                  onChange={(e) => setIncharge(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Incharge"
                 /></div></div>
@@ -86,8 +86,8 @@ const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={length}
-                  onChange={(e) => setLength(e.target.value)}
+                  value={crew}
+                  onChange={(e) => setCrew(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Crew"
                 /></div>
@@ -97,8 +97,8 @@ const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={width}
-                  onChange={(e) => setWidth(e.target.value)}
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Guests"
                 /></div></div>
@@ -108,8 +108,8 @@ const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={homePort}
-                  onChange={(e) => setHomePort(e.target.value)}
+                  value={weightCapacity}
+                  onChange={(e) => setWeightCapacity(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Weight Capacity"
                 /></div>
@@ -119,8 +119,8 @@ const DecksModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="file"
-                  value={yearBuilt}
-                  onChange={(e) => setYearBuilt(e.target.value)}
+                  value={gaLayout}
+                  onChange={(e) => setGaLayout(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Year Built"
                 /></div></div>

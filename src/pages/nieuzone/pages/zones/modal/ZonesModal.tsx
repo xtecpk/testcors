@@ -1,34 +1,34 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface NieusetModalProps {
+interface ZonesModalProps {
   show: boolean;
   onHide: (e: React.MouseEvent) => void;
 }
 
-const ZonesModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
-  const [vesselID, setVesselID] = useState<string>("");
-  const [registoryNo, setRegistoryNo] = useState<string>("");
-  const [length, setLength] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
+const ZonesModal: React.FC<ZonesModalProps> = ({ show, onHide }) => {
+  const [zoneID, setZoneID] = useState<string>("");
+  const [zoneName, setZoneName] = useState<string>("");
+  const [department, setDepartment] = useState<string>("");
+  const [items, setItems] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!vesselID || !registoryNo || !length || !width ) {
+    if (!zoneID || !zoneName || !department || !items ) {
       setError("All fields are required");
       return;
     }
 
     setError(null);
 
-    const data = { vesselID, registoryNo, length, width };
+    const data = { zoneID, zoneName, department, items };
 
     try {
       await axios.post("YOUR_API_ENDPOINT", data);
-      setVesselID("");
-      setRegistoryNo("");
-      setLength("");
-      setWidth("");
+      setZoneID("");
+      setZoneName("");
+      setDepartment("");
+      setItems("");
     } catch (error) {
       console.error("Failed to submit data:", error);
       setError("Failed to submit data. Please try again.");
@@ -60,8 +60,8 @@ const ZonesModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={vesselID}
-                  onChange={(e) => setVesselID(e.target.value)}
+                  value={zoneID}
+                  onChange={(e) => setZoneID(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Zone ID"
                 /></div>
@@ -71,8 +71,8 @@ const ZonesModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={registoryNo}
-                  onChange={(e) => setRegistoryNo(e.target.value)}
+                  value={zoneName}
+                  onChange={(e) => setZoneName(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Zone Name"
                 /></div></div>
@@ -82,8 +82,8 @@ const ZonesModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={length}
-                  onChange={(e) => setLength(e.target.value)}
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Department"
                 /></div>
@@ -93,8 +93,8 @@ const ZonesModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
                 </label>
                 <input
                   type="text"
-                  value={width}
-                  onChange={(e) => setWidth(e.target.value)}
+                  value={items}
+                  onChange={(e) => setItems(e.target.value)}
                   className="form-control input"
                   placeholder="Enter Items"
                 /></div></div>

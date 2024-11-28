@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface NieusetModalProps {
+interface NieuGuardModalProps {
   show: boolean;
   onHide: (e: React.MouseEvent) => void;
 }
 
-const NieuGuardModal: React.FC<NieusetModalProps> = ({ show, onHide }) => {
+const NieuGuardModal: React.FC<NieuGuardModalProps> = ({ show, onHide }) => {
   const [userName, setUserName] = useState<string>("");
   const [startingHours, setStartingHours] = useState<string>("");
   const [endingHours, setEndingHours] = useState<string>("");
