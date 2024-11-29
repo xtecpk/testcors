@@ -30,10 +30,10 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
       setError("Please upload an avatar before submitting.");
       return;
     }
-
+  
     setLoading(true);
     setError(null);
-
+  
     try {
       // Step 1: Register the user
       const userResponse = await axiosInstance.post("auth/register", {
@@ -44,35 +44,40 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
         personalemail: personalEmail,
         phone,
       });
-
-      const userId = userResponse.data?.profile?.id;
+  
+      const userId = userResponse.data.profile.userId;
       console.log("User registered successfully, ID:", userId);
-
+  
       // Step 2: Upload the avatar
       const avatarFormData = new FormData();
-      avatarFormData.append("file", avatar);
+      avatarFormData.append("file", avatar); // Avatar file
+      avatarFormData.append("folderType", "images");
+      avatarFormData.append("category", "profilePictures");
+      avatarFormData.append("subcategory", "avatars");
+      avatarFormData.append("userId", userId); // Attach user ID
+  
       console.log("FormData being sent:", avatarFormData);
-
+  
       const avatarResponse = await axiosInstance.post("uploads/upload/", avatarFormData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
+  
       console.log("Avatar response:", avatarResponse);
-
+  
       const avatarPath = avatarResponse.data?.file?.path;
       console.log("Avatar uploaded successfully:", avatarPath);
-
+  
       // Step 3: Link avatar to the user
       if (avatarPath && userId) {
         await axiosInstance.put(`auth/users/${userId}`, {
           avatar: avatarPath,
         });
-
+  
         console.log("User and avatar linked successfully.");
         alert("User created successfully!");
-
+  
         // Clear form fields
         setName("");
         setPassword("");
