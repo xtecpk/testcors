@@ -12,25 +12,75 @@ const Header: React.FC = () => {
     { title: 'Server Maintenance', message: 'Scheduled server maintenance on November 5th at 2 AM.' },
     { title: 'Weekly Standup Reminder', message: 'Don’t forget the weekly standup meeting tomorrow at 10 AM.' },
   ]);
+  const [username, setUsername] = useState<string>('');
+  const [avatar, setAvatar] = useState<string>('');
 
   const logoutModalRef = useRef<HTMLDivElement | null>(null);
-  const profileRef = useRef<HTMLDivElement | null>(null); // Reference for the profile image
+  const profileRef = useRef<HTMLDivElement | null>(null);
 
-  // Toggle the notification dropdown
+  // Fetch user data from localStorage and user avatar
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+
+    if (user && token) {
+      try {
+        const parsedUser = JSON.parse(user);
+        setUsername(parsedUser.name || '');
+
+        // Fetch the avatar if `parsedUser.avatar` exists
+        if (parsedUser.avatar) {
+          const avatarURL = `http://localhost:4572/private/user/${parsedUser.avatar}`;
+
+          fetch(avatarURL, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch avatar');
+            }
+            return response.blob();
+          })
+          .then(blob => {
+            setAvatar(URL.createObjectURL(blob)); // Set the blob as a URL
+          })
+          .catch(error => {
+            console.error('Error fetching avatar:', error);
+          });
+        }
+      } catch (error) {
+        console.error('Error parsing user data from localStorage:', error);
+      }
+    } else {
+      console.warn('User data or token not found in local storage');
+    }
+  }, []); // Runs once when the component mounts
+
+  // Clean up the object URL to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      if (avatar) {
+        URL.revokeObjectURL(avatar);
+      }
+    };
+  }, [avatar]);
+
   const handleNotificationToggle = () => {
-    setIsNotificationOpen((prevState) => !prevState);
+    setIsNotificationOpen(prevState => !prevState);
   };
 
-  // Remove a specific notification
   const handleNotificationClose = (index: number) => {
-    setNotifications((prev) => prev.filter((_, i) => i !== index));
+    setNotifications(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Clear all user data and redirect to login
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    document.cookie.split(';').forEach((cookie) => {
+    document.cookie.split(';').forEach(cookie => {
       document.cookie = cookie
         .replace(/^ +/, '')
         .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
@@ -38,21 +88,17 @@ const Header: React.FC = () => {
     window.location.href = '/login';
   };
 
-  // Close the modal if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         logoutModalRef.current && !logoutModalRef.current.contains(event.target as Node) &&
         profileRef.current && !profileRef.current.contains(event.target as Node)
       ) {
-        setIsLogoutOpen(false); // Close the modal when clicking outside
+        setIsLogoutOpen(false);
       }
     };
 
-    // Add event listener
     document.addEventListener('click', handleClickOutside);
-
-    // Clean up event listener on component unmount
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
@@ -61,49 +107,37 @@ const Header: React.FC = () => {
   return (
     <header className="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
       <div>Welcome aboard! | HMS Black Widow, M/Y</div>
-
-      <div className="d-flex align-items-center">
-        {/* Shopping Cart Icon */}
+      <div className="d-flex align-items-center mx-2">
         <div className="position-relative me-3">
           <FaShoppingCart size={20} />
         </div>
-
-        {/* Notifications Icon */}
-        <div
-          className="position-relative me-3"
-          onClick={handleNotificationToggle}
-          style={{ cursor: 'pointer' }}
-        >
+        <div className="position-relative me-3 mx-2" onClick={handleNotificationToggle} style={{ cursor: 'pointer' }}>
           <FaBell size={20} />
           <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
             {notifications.length}
           </span>
         </div>
-
-        {/* User Info and Logout */}
-        <div className="d-flex align-items-center" ref={profileRef}>
-          <span className="me-2">Fahad Ahmad</span>
-          <img
-            src="https://images.unsplash.com/photo-1684966610091-f6beda2d025a?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="User"
-            className="rounded-circle"
-            style={{ width: '40px', height: '40px', cursor: 'pointer' }}
-            onClick={() => setIsLogoutOpen(true)}
-          />
+        <div className="d-flex align-items-center mx-2" ref={profileRef}>
+          <span className="me-2">{username}</span>
+          {avatar && (
+            <img
+              src={avatar}
+              className="rounded-circle w-10 h-10 cursor-pointer object-contain"
+              onClick={() => setIsLogoutOpen(true)}
+              crossOrigin="anonymous"
+              alt={`${username}'s avatar`}
+            />
+          )}
         </div>
       </div>
-
-      {/* Notification Dropdown */}
       {isNotificationOpen && (
         <div className="position-absolute" style={{ top: '60px', right: '20px', zIndex: 1000 }}>
           <Notification notifications={notifications} onClose={handleNotificationClose} />
         </div>
       )}
-
-      {/* Logout Modal */}
       {isLogoutOpen && (
         <div
-          ref={logoutModalRef} // Reference to the logout modal
+          ref={logoutModalRef}
           id="logoutModal"
           className="position-absolute m-3"
           style={{ top: '50px', right: '10px', zIndex: 1000 }}

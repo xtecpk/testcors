@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { AxiosError } from "axios";
-import { ColorRing } from "react-loader-spinner";
+import { Oval } from 'react-loader-spinner';
 
 interface AddManageProps {
   show: boolean;
@@ -71,7 +71,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
   
       // Step 3: Link avatar to the user
       if (avatarPath && userId) {
-        await axiosInstance.put(`auth/users/${userId}`, {
+        console.log("Updating user:", userId, "with avatar path:", avatarPath);
+        await axiosInstance.patch(`user/updateuser`, {
+          userId: userId,
           avatar: avatarPath,
         });
   
@@ -111,6 +113,7 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <>
@@ -127,18 +130,20 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-              {error && <div className="alert alert-danger text-center">{error}</div>}
+              {error && (
+                <div className="alert alert-danger text-center">{error}</div>
+              )}
               <form method="post" className="p-4">
                 {loading ? (
                   <div className="flex justify-center items-center">
-                    <ColorRing
+                    <Oval
                       visible={true}
                       height="80"
                       width="80"
-                      ariaLabel="color-ring-loading"
+                      color="#4fa94d"
+                      ariaLabel="oval-loading"
                       wrapperStyle={{}}
-                      wrapperClass="color-ring-wrapper"
-                      colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+                      wrapperClass=""
                     />
                   </div>
                 ) : (
@@ -146,7 +151,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
                     {/* Input fields */}
                     <div className="row">
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Name:</label>
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Name:
+                        </label>
                         <input
                           type="text"
                           value={name}
@@ -156,7 +163,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
                         />
                       </div>
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Password:</label>
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Password:
+                        </label>
                         <input
                           type="password"
                           value={password}
@@ -169,17 +178,21 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
 
                     <div className="row">
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Role:</label>
-                        <input
-                          type="text"
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Role:
+                        </label>
+                        <select
                           value={role}
                           onChange={(e) => setRole(e.target.value)}
                           className="form-control input"
-                          placeholder="Enter role"
-                        />
+                        >
+                          <option value="Admin">Admin</option>
+                        </select>
                       </div>
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Employee ID:</label>
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Employee ID:
+                        </label>
                         <input
                           type="text"
                           value={employeeId}
@@ -192,7 +205,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
 
                     <div className="row">
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Personal Email:</label>
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Personal Email:
+                        </label>
                         <input
                           type="email"
                           value={personalEmail}
@@ -202,7 +217,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
                         />
                       </div>
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Phone:</label>
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Phone:
+                        </label>
                         <input
                           type="text"
                           value={phone}
@@ -215,7 +232,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
 
                     <div className="row">
                       <div className="col">
-                        <label className="text-[#000] pt-2 pb-2 fw-bold">Avatar:</label>
+                        <label className="text-[#000] pt-2 pb-2 fw-bold">
+                          Avatar:
+                        </label>
                         <input
                           type="file"
                           onChange={handleAvatarChange}

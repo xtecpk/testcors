@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from "../../../../../axiosInstance"; // Adjust the import path based on your project structure
+import { Oval } from 'react-loader-spinner';
 
 interface ProductModalProps {
   show: boolean;
@@ -43,6 +44,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
     maximumstock: 0,
   });
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -108,32 +110,75 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
     }
 
     setError(null);
+    setLoading(true);
 
     try {
-      // Prepare form data for POST request (if `featuredimg` needs to be sent as FormData)
-      const form = new FormData();
-      form.append("name", name);
-      form.append("price", price.toString());
-      form.append("description", description);
-      form.append("featuredimg", featuredimg);
-      form.append("maxstock", maxstock.toString());
-      form.append("symbol", symbol);
-      form.append("hazmat", hazmat);
-      form.append("hazmattype", hazmattype);
-      form.append("precaution", precaution);
-      form.append("useageinstructions", useageinstructions);
-      form.append("avgToolHealth", avgToolHealth.toString());
-      form.append("mfgDate", mfgDate);
-      form.append("expiryDate", expiryDate);
-      form.append("minimumstock", minimumstock.toString());
-      form.append("maximumstock", maximumstock.toString());
+      // Step 1: Upload the product data
+      const productData = {
+        name,
+        price,
+        description,
+        maxstock,
+        symbol,
+        hazmat,
+        hazmattype,
+        precaution,
+        useageinstructions,
+        avgToolHealth,
+        mfgDate,
+        expiryDate,
+        minimumstock,
+        maximumstock,
+      };
 
-      // Send POST request to your backend API endpoint
-      await axiosInstance.post("product/add", form, {
+      const productResponse = await axiosInstance.post("product/add", productData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Product uploaded successfully:", productResponse);
+      const productId = productResponse.data?.productId;
+      if (!productId) {
+        setError("Failed to upload the product.");
+        return;
+      }
+
+      // Step 2: Upload the featured image
+      const imageFormData = new FormData();
+      imageFormData.append("file", featuredimg); // Featured image
+      imageFormData.append("folderType", "public");
+      imageFormData.append("category", "Images");
+      imageFormData.append("productdid", productId); // Attach product ID
+
+      console.log("Image FormData being sent:", imageFormData);
+
+      const imageResponse = await axiosInstance.post("uploads/upload/", imageFormData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      console.log("Image uploaded successfully:", imageResponse);
+      const imagePath = imageResponse.data?.file?.path;
+      if (!imagePath) {
+        setError("Failed to upload the image.");
+        return;
+      }
+
+      // Step 3: Update the product with the image path
+      if (productId && imagePath) {
+        console.log("Updating product:", productId, "with image path:", imagePath);
+        await axiosInstance.patch(`product/update`, {
+          productid: productId,
+          imagepath: imagePath,
+        });
+
+        console.log("Product updated with featured image successfully.");
+      } else {
+        setError("Product ID or image path is missing.");
+        return;
+      }
 
       // Clear form data after successful submission
       setFormData({
@@ -153,9 +198,12 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
         minimumstock: 0,
         maximumstock: 0,
       });
+      alert("Product added and featured image updated successfully!");
     } catch (err) {
       console.error("Failed to submit data:", err);
       setError("Failed to submit data. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,190 +222,214 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
             onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
           >
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-              {error && <div className="alert alert-danger text-center">{error}</div>}
-              <div className="p-4 text-start">
-                {/* Render form fields */}
-                <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Name:</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Name"
+              {error && (
+                <div className="alert alert-danger text-center">{error}</div>
+              )}
+              <form method="post" className="p-4">
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <Oval
+                      visible={true}
+                      height="80"
+                      width="80"
+                      color="#4fa94d"
+                      ariaLabel="oval-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
                     />
                   </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Price:</label>
-                    <input
-                      type="number"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Price"
-                    />
-                  </div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Description:</label>
-                    <input
-                      type="text"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Description"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Featured Image:</label>
-                    <input
-                      type="file"
-                      name="featuredimg"
-                      onChange={handleInputChange}
-                      className="form-control input"
-                    />
-                  </div></div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Max Stock:</label>
-                    <input
-                      type="number"
-                      name="maxstock"
-                      value={formData.maxstock}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Max Stock"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Symbol:</label>
-                    <input
-                      type="text"
-                      name="symbol"
-                      value={formData.symbol}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Symbol"
-                    />
-                  </div></div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Hazmat:</label>
-                    <input
-                      type="text"
-                      name="hazmat"
-                      value={formData.hazmat}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Hazmat"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Hazmat Type:</label>
-                    <input
-                      type="text"
-                      name="hazmattype"
-                      value={formData.hazmattype}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Hazmat Type"
-                    />
-                  </div></div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Precaution:</label>
-                    <input
-                      type="text"
-                      name="precaution"
-                      value={formData.precaution}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Precaution"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Usage Instructions:</label>
-                    <input
-                      type="text"
-                      name="useageinstructions"
-                      value={formData.useageinstructions}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Usage Instructions"
-                    />
-                  </div></div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Average Tool Health:</label>
-                    <input
-                      type="number"
-                      name="avgToolHealth"
-                      value={formData.avgToolHealth}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Average Tool Health"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Manufacturing Date:</label>
-                    <input
-                      type="date"
-                      name="mfgDate"
-                      value={formData.mfgDate}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                    />
-                  </div></div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Expiry Date:</label>
-                    <input
-                      type="date"
-                      name="expiryDate"
-                      value={formData.expiryDate}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                    />
-                  </div>
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Minimum Stock:</label>
-                    <input
-                      type="number"
-                      name="minimumstock"
-                      value={formData.minimumstock}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Minimum Stock"
-                    />
-                  </div></div>
-                  <div className="row">
-                  <div className="col">
-                    <label className="text-[#000] pt-2 pb-2 fw-bold">Maximum Stock:</label>
-                    <input
-                      type="number"
-                      name="maximumstock"
-                      value={formData.maximumstock}
-                      onChange={handleInputChange}
-                      className="form-control input"
-                      placeholder="Enter Maximum Stock"
-                    />
-                  </div></div>
-                </div>
-
-                <div className="flex justify-end mt-4">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={handleSubmit}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
+                ) : (
+                  <>
+                    <div className="p-4 text-start">
+                      {/* Form fields */}
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Name:</label>
+                          <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Name"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Price:</label>
+                          <input
+                            type="number"
+                            name="price"
+                            value={formData.price}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Price"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Description:</label>
+                          <input
+                            type="text"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Description"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Featured Image:</label>
+                          <input
+                            type="file"
+                            name="featuredimg"
+                            onChange={handleInputChange}
+                            className="form-control input"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Max Stock:</label>
+                          <input
+                            type="number"
+                            name="maxstock"
+                            value={formData.maxstock}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Max Stock"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Symbol:</label>
+                          <input
+                            type="text"
+                            name="symbol"
+                            value={formData.symbol}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Symbol"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Hazmat:</label>
+                          <input
+                            type="text"
+                            name="hazmat"
+                            value={formData.hazmat}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Hazmat"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Hazmat Type:</label>
+                          <input
+                            type="text"
+                            name="hazmattype"
+                            value={formData.hazmattype}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Hazmat Type"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Precaution:</label>
+                          <input
+                            type="text"
+                            name="precaution"
+                            value={formData.precaution}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Precaution"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Usage Instructions:</label>
+                          <input
+                            type="text"
+                            name="useageinstructions"
+                            value={formData.useageinstructions}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Usage Instructions"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Average Tool Health:</label>
+                          <input
+                            type="number"
+                            name="avgToolHealth"
+                            value={formData.avgToolHealth}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Average Tool Health"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">MFG Date:</label>
+                          <input
+                            type="date"
+                            name="mfgDate"
+                            value={formData.mfgDate}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Expiry Date:</label>
+                          <input
+                            type="date"
+                            name="expiryDate"
+                            value={formData.expiryDate}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Min Stock:</label>
+                          <input
+                            type="number"
+                            name="minimumstock"
+                            value={formData.minimumstock}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Min Stock"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Max Stock:</label>
+                          <input
+                            type="number"
+                            name="maximumstock"
+                            value={formData.maximumstock}
+                            onChange={handleInputChange}
+                            className="form-control input"
+                            placeholder="Enter Max Stock"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-center mt-1">
+                      <button
+                        type="button"
+                        className="green w-48 p-2 px-40 rounded-lg text-white font-semibold inter my-3"
+                        onClick={handleSubmit}
+                      >
+                        {loading ? "Submitting..." : "Add Product"}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </form>
             </div>
           </div>
         </div>

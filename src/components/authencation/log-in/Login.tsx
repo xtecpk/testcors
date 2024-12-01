@@ -41,8 +41,9 @@ const Login: React.FC = () => {
       console.log('Server Response:', response);
   
       if (response.status === 200 && response.data?.token) {
+        // Save token and user ID to local storage after successful login
         localStorage.setItem('token', response.data.token);
-        console.log('Login successful. Token:', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
         navigate('/NIEUDASH');
       } else {
         setErrorMessage(response.data?.message || 'Login failed.');
@@ -62,14 +63,12 @@ const Login: React.FC = () => {
       setLoading(false); // Hide loader after login attempt
     }
   };
-
+  
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-[#f1f1f1]">
       {loading ? (
-        // Show the loader while loading
         <Loader />
       ) : (
-        // Show the login form if not loading
         <div className="row shadow-gray-500 w-75 h-75 rounded-xl" id="login-card">
           {/* Left Section */}
           <div className="col-md-6 d-flex flex-column align-items-center justify-content-center blue text-white p-4 rounded-start shadow-2xl">
@@ -131,7 +130,7 @@ const Login: React.FC = () => {
                 Don't have an account? <Link to="/signup">Sign Up</Link>
               </p>
               <p>Forgotten </p>
-              <p className="mt-10">Version 1.0.9</p>
+              <p className="mt-10">Version 1.1.0</p>
             </div>
           </div>
         </div>
