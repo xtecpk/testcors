@@ -230,7 +230,7 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)} 
                           className="form-control input"
-                          placeholder="Enter phone"
+                          placeholder="Enter 12-digit phone number"
                           maxLength={12}
                         />
                       </div>

@@ -161,8 +161,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
       const imageFormData = new FormData();
       imageFormData.append("file", featuredimg); // Featured image
       imageFormData.append("folderType", "public");
-      imageFormData.append("category", "Images");
-      imageFormData.append("", "1");
+      imageFormData.append("category", "images");
       imageFormData.append("productdid", productId); // Attach product ID
 
       console.log("Image FormData being sent:", imageFormData);
