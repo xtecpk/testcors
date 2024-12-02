@@ -55,6 +55,7 @@ function NieuManage() {
       headerName: "Avatar",
       editable: false,
       cellRenderer: (params: ICellRendererParams<CategoryData>) => {
+        console.log(params.value); // Log the avatar field value
         const imageUrl = params.value ? `https://nieucore.com/backend/${params.value}` : null;
         return imageUrl ? (
           <img
