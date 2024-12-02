@@ -69,9 +69,9 @@ function Products() {
   // Column definitions for the ag-Grid
   const [columnDefs] = useState<ColDef<ProductWithActions>[]>([
     { field: "sku", flex: 1, headerName: "SKU", filter: true, floatingFilter: true },
-    { field: "name", flex: 3, headerName: "Name", filter: true, floatingFilter: true },
+    { field: "name", flex: 1, headerName: "Name", filter: true, floatingFilter: true },
     { field: "price", flex: 1, headerName: "Price", filter: true, floatingFilter: true },
-    { field: "description", flex: 3, headerName: "Description", filter: true, floatingFilter: true },
+    { field: "description", flex: 1, headerName: "Description", filter: true, floatingFilter: true },
     {
       field: "featuredimg",
       flex: 1,
@@ -86,10 +86,10 @@ function Products() {
     },
     { field: "maxstock", flex: 1, headerName: "Max Stock", filter: true, floatingFilter: true },
     { field: "symbol", flex: 1, headerName: "Symbol", filter: true, floatingFilter: true },
-    { field: "hazmat", flex: 2, headerName: "Hazmat", filter: true, floatingFilter: true },
-    { field: "hazmattype", flex: 2, headerName: "Hazmat Type", filter: true, floatingFilter: true },
-    { field: "precaution", flex: 2, headerName: "Precaution", filter: true, floatingFilter: true },
-    { field: "useageinstructions", flex: 2, headerName: "Usage Instructions", filter: true, floatingFilter: true },
+    { field: "hazmat", flex: 1, headerName: "Hazmat", filter: true, floatingFilter: true },
+    { field: "hazmattype", flex: 1, headerName: "Hazmat Type", filter: true, floatingFilter: true },
+    { field: "precaution", flex: 1, headerName: "Precaution", filter: true, floatingFilter: true },
+    { field: "useageinstructions", flex: 1, headerName: "Usage Instructions", filter: true, floatingFilter: true },
     { field: "avgToolHealth", flex: 1, headerName: "Avg Tool Health", filter: true, floatingFilter: true },
     { field: "mfgDate", flex: 1, headerName: "Mfg Date", filter: true, floatingFilter: true },
     { field: "expiryDate", flex: 1, headerName: "Expiry Date", filter: true, floatingFilter: true },

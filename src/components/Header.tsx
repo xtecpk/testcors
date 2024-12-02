@@ -21,17 +21,17 @@ const Header: React.FC = () => {
   // Fetch user data from localStorage and user avatar
   useEffect(() => {
     const user = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-
-    if (user && token) {
+    const token = localStorage.getItem('token'); // If authentication is required
+    
+    if (user) {
       try {
         const parsedUser = JSON.parse(user);
         setUsername(parsedUser.name || '');
-
+        
         // Fetch the avatar if `parsedUser.avatar` exists
         if (parsedUser.avatar) {
-          const avatarURL = `http://localhost:4572/private/user/${parsedUser.avatar}`;
-
+          const avatarURL = `https://nieucore.com/backend/private/user/${parsedUser.avatar}`;
+          
           fetch(avatarURL, {
             method: 'GET',
             credentials: 'include',
@@ -41,25 +41,27 @@ const Header: React.FC = () => {
           })
           .then(response => {
             if (!response.ok) {
+              console.error(`Failed to fetch avatar: ${response.status} ${response.statusText}`);
               throw new Error('Failed to fetch avatar');
             }
             return response.blob();
           })
           .then(blob => {
-            setAvatar(URL.createObjectURL(blob)); // Set the blob as a URL
+            setAvatar(URL.createObjectURL(blob));
           })
           .catch(error => {
-            console.error('Error fetching avatar:', error);
+            console.error('Error fetching avatar:', error.message);
           });
+          
         }
       } catch (error) {
         console.error('Error parsing user data from localStorage:', error);
       }
     } else {
-      console.warn('User data or token not found in local storage');
+      console.warn('User data not found in local storage');
     }
   }, []); // Runs once when the component mounts
-
+  
   // Clean up the object URL to avoid memory leaks
   useEffect(() => {
     return () => {
@@ -68,6 +70,7 @@ const Header: React.FC = () => {
       }
     };
   }, [avatar]);
+   
 
   const handleNotificationToggle = () => {
     setIsNotificationOpen(prevState => !prevState);

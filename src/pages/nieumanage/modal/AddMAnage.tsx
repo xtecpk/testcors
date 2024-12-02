@@ -51,9 +51,8 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
       // Step 2: Upload the avatar
       const avatarFormData = new FormData();
       avatarFormData.append("file", avatar); // Avatar file
-      avatarFormData.append("folderType", "images");
+      avatarFormData.append("folderType", "public");
       avatarFormData.append("category", "profilePictures");
-      avatarFormData.append("subcategory", "avatars");
       avatarFormData.append("userId", userId); // Attach user ID
   
       console.log("FormData being sent:", avatarFormData);

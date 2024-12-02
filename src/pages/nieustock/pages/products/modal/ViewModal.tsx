@@ -52,7 +52,8 @@ const ViewModal: React.FC<ViewModalProps> = ({ show, onHide, product }) => {
   };
 
   // Ensure activeTab is typed as a key of tabContent
-  const [activeTab, setActiveTab] = useState<keyof typeof tabContent>("Description");
+  const [activeTab, setActiveTab] =
+    useState<keyof typeof tabContent>("Description");
 
   return (
     <>
@@ -168,21 +169,23 @@ const ViewModal: React.FC<ViewModalProps> = ({ show, onHide, product }) => {
 
               <div className="container">
                 {/* Bottom Row */}
-                <div className="row mt-4">
-                  {/* Tabs */}
-                  <div className="row mt-4">
-                    {/* Tabs */}
-                    <div className="col-7">
+                <div className="row">
+                  {/* Tabs and Tab Content */}
+                  <div className="col-8 mt-3">
+                    <div className="mt-4">
+                      {/* Tabs */}
                       <ul className="nav nav-tabs">
                         {Object.keys(tabContent).map((tab) => (
                           <li className="nav-item" key={tab}>
                             <button
                               className={`nav-link ${
                                 activeTab === tab
-                                  ? "bg-blue text-white"
+                                  ? "blue text-white" // Active tab styling
                                   : "bg-white text-black"
                               }`}
-                              onClick={() => setActiveTab(tab as keyof typeof tabContent)}
+                              onClick={() =>
+                                setActiveTab(tab as keyof typeof tabContent)
+                              }
                             >
                               {tab}
                             </button>
@@ -195,28 +198,28 @@ const ViewModal: React.FC<ViewModalProps> = ({ show, onHide, product }) => {
                   </div>
 
                   {/* Location Details */}
-                  <div className="col-5">
+                  <div className="col-4 mt-4">
                     <div className="bg-light p-3 rounded shadow-sm h-[18rem] text-start">
                       <h5 className="fw-bold">Product Information</h5>
-                      <hr className="my-3 " />
+                      <hr className="my-3" />
                       <h5 className="fw-bold">Locations</h5>
-                      <hr className="my-3 " />
+                      <hr className="my-3" />
                       <p className="mb-1 my-2">
                         <strong>
                           Location 1: <br />
-                        </strong>{" "}
+                        </strong>
                         Deck 1-Bridge A
                       </p>
                       <p className="mb-1 my-2">
                         <strong>
                           Location 2: <br />
-                        </strong>{" "}
+                        </strong>
                         Deck 2-Bridge B
                       </p>
                       <p className="mb-1 my-2">
                         <strong>
                           Location 3: <br />
-                        </strong>{" "}
+                        </strong>
                         Deck 3-Bridge C
                       </p>
                     </div>

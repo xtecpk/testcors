@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from "../../../../../axiosInstance"; // Adjust the import path based on your project structure
-import { Oval } from 'react-loader-spinner';
+import { Oval } from "react-loader-spinner";
 
 interface ProductModalProps {
   show: boolean;
@@ -23,6 +23,9 @@ interface FormData {
   expiryDate: string;
   minimumstock: number;
   maximumstock: number;
+  galleryImage1: File | null;
+  galleryImage2: File | null;
+  galleryImage3: File | null;
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
@@ -42,7 +45,11 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
     expiryDate: "",
     minimumstock: 0,
     maximumstock: 0,
+    galleryImage1: null,
+    galleryImage2: null,
+    galleryImage3: null,
   });
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -79,9 +86,12 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
       expiryDate,
       minimumstock,
       maximumstock,
+      galleryImage1,
+      galleryImage2,
+      galleryImage3,
     } = formData;
 
-    // Validation
+    // Validation checks
     if (
       !name ||
       price <= 0 ||
@@ -97,7 +107,10 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
       !mfgDate ||
       !expiryDate ||
       minimumstock < 0 ||
-      maximumstock < 0
+      maximumstock < 0 ||
+      !galleryImage1 ||
+      !galleryImage2 ||
+      !galleryImage3
     ) {
       setError("Please fill out all fields with valid data.");
       return;
@@ -149,6 +162,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
       imageFormData.append("file", featuredimg); // Featured image
       imageFormData.append("folderType", "public");
       imageFormData.append("category", "Images");
+      imageFormData.append("", "1");
       imageFormData.append("productdid", productId); // Attach product ID
 
       console.log("Image FormData being sent:", imageFormData);
@@ -169,7 +183,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
       // Step 3: Update the product with the image path
       if (productId && imagePath) {
         console.log("Updating product:", productId, "with image path:", imagePath);
-        await axiosInstance.patch(`product/update`, {
+        await axiosInstance.patch("product/update", {
           productid: productId,
           imagepath: imagePath,
         });
@@ -197,7 +211,11 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
         expiryDate: "",
         minimumstock: 0,
         maximumstock: 0,
+        galleryImage1: null,
+        galleryImage2: null,
+        galleryImage3: null,
       });
+
       alert("Product added and featured image updated successfully!");
     } catch (err) {
       console.error("Failed to submit data:", err);
@@ -279,17 +297,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                           />
                         </div>
                         <div className="col">
-                          <label className="text-[#000] pt-2 pb-2 fw-bold">Featured Image:</label>
-                          <input
-                            type="file"
-                            name="featuredimg"
-                            onChange={handleInputChange}
-                            className="form-control input"
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Max Stock:</label>
                           <input
                             type="number"
@@ -300,6 +307,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Max Stock"
                           />
                         </div>
+                      </div>
+                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Symbol:</label>
                           <input
@@ -311,8 +320,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Symbol"
                           />
                         </div>
-                      </div>
-                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Hazmat:</label>
                           <input
@@ -324,6 +331,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Hazmat"
                           />
                         </div>
+                      </div>
+                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Hazmat Type:</label>
                           <input
@@ -335,8 +344,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Hazmat Type"
                           />
                         </div>
-                      </div>
-                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Precaution:</label>
                           <input
@@ -348,6 +355,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Precaution"
                           />
                         </div>
+                      </div>
+                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Usage Instructions:</label>
                           <input
@@ -359,8 +368,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Usage Instructions"
                           />
                         </div>
-                      </div>
-                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Average Tool Health:</label>
                           <input
@@ -372,8 +379,10 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             placeholder="Enter Average Tool Health"
                           />
                         </div>
+                      </div>
+                      <div className="row">
                         <div className="col">
-                          <label className="text-[#000] pt-2 pb-2 fw-bold">MFG Date:</label>
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Manufacturing Date:</label>
                           <input
                             type="date"
                             name="mfgDate"
@@ -382,8 +391,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             className="form-control input"
                           />
                         </div>
-                      </div>
-                      <div className="row">
                         <div className="col">
                           <label className="text-[#000] pt-2 pb-2 fw-bold">Expiry Date:</label>
                           <input
@@ -394,37 +401,78 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                             className="form-control input"
                           />
                         </div>
+                      </div>
+                      <div className="row">
                         <div className="col">
-                          <label className="text-[#000] pt-2 pb-2 fw-bold">Min Stock:</label>
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Minimum Stock:</label>
                           <input
                             type="number"
                             name="minimumstock"
                             value={formData.minimumstock}
                             onChange={handleInputChange}
                             className="form-control input"
-                            placeholder="Enter Min Stock"
+                            placeholder="Enter Minimum Stock"
                           />
                         </div>
                         <div className="col">
-                          <label className="text-[#000] pt-2 pb-2 fw-bold">Max Stock:</label>
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Maximum Stock:</label>
                           <input
                             type="number"
                             name="maximumstock"
                             value={formData.maximumstock}
                             onChange={handleInputChange}
                             className="form-control input"
-                            placeholder="Enter Max Stock"
+                            placeholder="Enter Maximum Stock"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Featured Image:</label>
+                          <input
+                            type="file"
+                            name="featuredimg"
+                            onChange={handleInputChange}
+                            className="form-control input"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Gallery Image 1:</label>
+                          <input
+                            type="file"
+                            name="galleryImage1"
+                            onChange={handleInputChange}
+                            className="form-control input"
+                          />
+                        </div></div>
+                        <div className="row">
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Gallery Image 2:</label>
+                          <input
+                            type="file"
+                            name="galleryImage2"
+                            onChange={handleInputChange}
+                            className="form-control input"
+                          />
+                        </div>
+                        <div className="col">
+                          <label className="text-[#000] pt-2 pb-2 fw-bold">Gallery Image 3:</label>
+                          <input
+                            type="file"
+                            name="galleryImage3"
+                            onChange={handleInputChange}
+                            className="form-control input"
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="text-center mt-1">
+                    <div className="p-4">
                       <button
                         type="button"
-                        className="green w-48 p-2 px-40 rounded-lg text-white font-semibold inter my-3"
                         onClick={handleSubmit}
+                        className="btn bg-[#1E90FF] text-white fw-bold px-6 py-2"
                       >
-                        {loading ? "Submitting..." : "Add Product"}
+                        Add Product
                       </button>
                     </div>
                   </>
