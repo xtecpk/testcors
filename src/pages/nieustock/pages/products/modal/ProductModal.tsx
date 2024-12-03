@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axiosInstance from "../../../../../axiosInstance"; // Adjust the import path based on your project structure
 import { Oval } from "react-loader-spinner";
+import { Toast, ToastContainer } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
 interface ProductModalProps {
   show: boolean;
@@ -8,54 +10,23 @@ interface ProductModalProps {
 }
 
 interface FormData {
-  name: string;
-  price: number;
-  description: string;
-  featuredimg: File | null;
-  maxstock: number;
-  symbol: string;
-  hazmat: string;
-  hazmattype: string;
-  precaution: string;
-  useageinstructions: string;
-  avgToolHealth: number;
-  mfgDate: string;
-  expiryDate: string;
-  minimumstock: number;
-  maximumstock: number;
-  galleryImage1: File | null;
-  galleryImage2: File | null;
-  galleryImage3: File | null;
+  name: string; price: number; description: string; featuredimg: File | null; maxstock: number; symbol: string;
+  hazmat: string; hazmattype: string; precaution: string; useageinstructions: string; avgToolHealth: number; mfgDate: string; expiryDate: string;
+  minimumstock: number; maximumstock: number; galleryImage1: File | null; galleryImage2: File | null; galleryImage3: File | null;
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    price: 0,
-    description: "",
-    featuredimg: null,
-    maxstock: 0,
-    symbol: "",
-    hazmat: "",
-    hazmattype: "",
-    precaution: "",
-    useageinstructions: "",
-    avgToolHealth: 0,
-    mfgDate: "",
-    expiryDate: "",
-    minimumstock: 0,
-    maximumstock: 0,
-    galleryImage1: null,
-    galleryImage2: null,
-    galleryImage3: null,
+    name: "", price: 0, description: "", featuredimg: null, maxstock: 0, symbol: "", hazmat: "", hazmattype: "",
+    precaution: "", useageinstructions: "", avgToolHealth: 0, mfgDate: "", expiryDate: "", minimumstock: 0,
+    maximumstock: 0, galleryImage1: null, galleryImage2: null, galleryImage3: null,
   });
-
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
-
     if (type === "file") {
       setFormData((prev) => ({
         ...prev,
@@ -71,46 +42,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
 
   const handleSubmit = async () => {
     const {
-      name,
-      price,
-      description,
-      featuredimg,
-      maxstock,
-      symbol,
-      hazmat,
-      hazmattype,
-      precaution,
-      useageinstructions,
-      avgToolHealth,
-      mfgDate,
-      expiryDate,
-      minimumstock,
-      maximumstock,
-      galleryImage1,
-      galleryImage2,
-      galleryImage3,
+      name, price, description, featuredimg, maxstock, symbol, hazmat, hazmattype, precaution,
+      useageinstructions, avgToolHealth, mfgDate, expiryDate, minimumstock, maximumstock,
+      galleryImage1, galleryImage2, galleryImage3,
     } = formData;
 
     // Validation checks
     if (
-      !name ||
-      price <= 0 ||
-      !description ||
-      !featuredimg ||
-      maxstock <= 0 ||
-      !symbol ||
-      !hazmat ||
-      !hazmattype ||
-      !precaution ||
-      !useageinstructions ||
-      avgToolHealth <= 0 ||
-      !mfgDate ||
-      !expiryDate ||
-      minimumstock < 0 ||
-      maximumstock < 0 ||
-      !galleryImage1 ||
-      !galleryImage2 ||
-      !galleryImage3
+      !name || price <= 0 || !description || !featuredimg || maxstock <= 0 || !symbol || !hazmat || !hazmattype ||
+      !precaution || !useageinstructions || avgToolHealth <= 0 || !mfgDate || !expiryDate || minimumstock < 0 ||
+      maximumstock < 0 || !galleryImage1 || !galleryImage2 || !galleryImage3
     ) {
       setError("Please fill out all fields with valid data.");
       return;
@@ -128,20 +69,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
     try {
       // Step 1: Upload the product data
       const productData = {
-        name,
-        price,
-        description,
-        maxstock,
-        symbol,
-        hazmat,
-        hazmattype,
-        precaution,
-        useageinstructions,
-        avgToolHealth,
-        mfgDate,
-        expiryDate,
-        minimumstock,
-        maximumstock,
+        name, price, description, maxstock, symbol, hazmat, hazmattype, precaution, useageinstructions, avgToolHealth,
+        mfgDate, expiryDate, minimumstock, maximumstock,
       };
 
       const productResponse = await axiosInstance.post("product/add", productData, {
@@ -193,6 +122,9 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
         return;
       }
 
+      // Show success toast
+      setShowToast(true);
+
       // Clear form data after successful submission
       setFormData({
         name: "",
@@ -214,8 +146,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
         galleryImage2: null,
         galleryImage3: null,
       });
-
-      alert("Product added and featured image updated successfully!");
     } catch (err) {
       console.error("Failed to submit data:", err);
       setError("Failed to submit data. Please try again.");
@@ -235,8 +165,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
           onClick={onHide}
         >
           <div
-            className="relative p-4 w-[1000px] rounded-lg"
-            onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
+            className="relative p-4 w-[1000px] rounded-lg "
+            onClick= {(e) => e.stopPropagation()} 
           >
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
               {error && (
@@ -257,7 +187,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                   </div>
                 ) : (
                   <>
-                    <div className="p-4 text-start">
+                    <div className="p-4 text-start overflow-y-auto max-h-96">
                       {/* Form fields */}
                       <div className="row">
                         <div className="col">
@@ -464,14 +394,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
                           />
                         </div>
                       </div>
+                      {/* (Same form fields as before) */}
                     </div>
-                    <div className="p-4">
+                    <div className="text-center mt-1">
                       <button
                         type="button"
                         onClick={handleSubmit}
-                        className="btn bg-[#1E90FF] text-white fw-bold px-6 py-2"
+                        className="green w-48 p-2 px-40 rounded-lg text-white font-semibold inter my-3"
+                        disabled={loading}
                       >
-                        Add Product
+                        {loading ? "Submitting..." : "Submit"}
                       </button>
                     </div>
                   </>
@@ -481,6 +413,19 @@ const ProductModal: React.FC<ProductModalProps> = ({ show, onHide }) => {
           </div>
         </div>
       )}
+
+      {/* Toast Notification */}
+      <ToastContainer position="top-end" className="p-3">
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3000}
+          autohide
+          bg="success"
+        >
+          <Toast.Body className="text-white">Product added successfully!</Toast.Body>
+        </Toast>
+      </ToastContainer>
     </>
   );
 };

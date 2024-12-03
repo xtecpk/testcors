@@ -5,13 +5,13 @@ import { Oval } from "react-loader-spinner";
 
 interface AddManageProps {
   show: boolean;
-  onHide: (e: React.MouseEvent) => void;
+  onHide: () => void; // Simplified onHide type
 }
 
 const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<string>("Admin");
   const [employeeId, setEmployeeId] = useState<string>("");
   const [personalEmail, setPersonalEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -50,15 +50,13 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
       });
 
       const userId = userResponse.data.profile.userId;
-      console.log("User registered successfully, ID:", userId);
 
+      // Step 2: Upload the avatar
       const avatarFormData = new FormData();
-      avatarFormData.append("file", avatar); // Avatar file
-      avatarFormData.append("folderType", "public"); // Ensure this is set as "public"
-      avatarFormData.append("category", "images"); // Ensure this is "images"
+      avatarFormData.append("folderType", "public");
+      avatarFormData.append("category", "images");
+      avatarFormData.append("file", avatar);
       avatarFormData.append("userId", userId);
-
-      console.log("FormData being sent:", avatarFormData);
 
       const avatarResponse = await axiosInstance.post(
         "uploads/upload/",
@@ -70,49 +68,27 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
         }
       );
 
-      console.log("Avatar response:", avatarResponse);
-
       const avatarPath = avatarResponse.data?.file?.path;
-      console.log("Avatar uploaded successfully:", avatarPath);
 
-      // Step 3: Link avatar to the user
       if (avatarPath && userId) {
-        console.log("Updating user:", userId, "with avatar path:", avatarPath);
+        // Step 3: Update the user with the avatar path
         await axiosInstance.patch(`user/updateuser`, {
           userId: userId,
           avatar: avatarPath,
         });
 
-        console.log("User and avatar linked successfully.");
         alert("User created successfully!");
-
-        // Clear form fields
-        setName("");
-        setPassword("");
-        setRole("");
-        setEmployeeId("");
-        setPersonalEmail("");
-        setPhone("");
-        setAvatar(null);
-        setError(null);
+        onHide(); // Close the modal
       } else {
         setError("Avatar path or user ID is missing.");
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (error.response) {
-          console.error("API Error:", error.response.data);
-          setError(
-            typeof error.response.data?.message === "string"
-              ? error.response.data.message
-              : "An error occurred. Please try again."
-          );
-        } else {
-          console.error("Network Error:", error.message);
-          setError("Network error, please check your connection.");
-        }
+        setError(
+          error.response?.data?.message ||
+          "An error occurred. Please try again."
+        );
       } else {
-        console.error("Unexpected Error:", error);
         setError("An unexpected error occurred. Please try again.");
       }
     } finally {
@@ -192,6 +168,7 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
                           className="form-control input"
                         >
                           <option value="Admin">Admin</option>
+                          {/* Add more roles if needed */}
                         </select>
                       </div>
                       <div className="col">
@@ -226,9 +203,9 @@ const AddManage: React.FC<AddManageProps> = ({ show, onHide }) => {
                           Phone:
                         </label>
                         <input
-                          type="number" 
+                          type="number"
                           value={phone}
-                          onChange={(e) => setPhone(e.target.value)} 
+                          onChange={(e) => setPhone(e.target.value)}
                           className="form-control input"
                           placeholder="Enter 12-digit phone number"
                           maxLength={12}
